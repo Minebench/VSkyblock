@@ -33,14 +33,16 @@ CobblestoneGenerator:
     Level_3_Info: §6- Chance auf Redstone
     Level_4_Item: IRON_PICKAXE
     Level_4_Info: §6- Chance auf Lapis Lazuli
-    Level_5_Item: GOLDEN_PICKAXE
-    Level_5_Info: §6- Chance auf Gold
-    Level_6_Item: DIAMOND_PICKAXE
-    Level_6_Info: §6- Chance auf Smaragde
+    Level_5_Item: IRON_PICKAXE
+    Level_5_Info: §6- Chance auf Kupfer
+    Level_6_Item: GOLDEN_PICKAXE
+    Level_6_Info: §6- Chance auf Gold
     Level_7_Item: DIAMOND_PICKAXE
-    Level_7_Info: §6- Chance auf Diamanten
-    Level_8_Item: NETHERITE_PICKAXE
-    Level_8_Info: §6- Chance auf Antiken Schrott
+    Level_7_Info: §6- Chance auf Smaragde
+    Level_8_Item: DIAMOND_PICKAXE
+    Level_8_Info: §6- Chance auf Diamanten
+    Level_9_Item: NETHERITE_PICKAXE
+    Level_9_Info: §6- Chance auf Antiken Schrott
   Upgrade:
     DisplayName: §8§l§nUpgrade
     DisplayNameMaxLevel: §8§l§nMax. Level
@@ -84,15 +86,23 @@ CobblestoneGenerator:
       - Sugar;64
       NeededText: 64 Redstone, 10 Äpfel, 64 Zucker
     Level_5:
+      Item: COPPER_ORE
+      AddsFeature: §9Chance auf Kupfer
+      Needed:
+        - Lapis_Lazuli;64
+        - Cactus;64
+        - Wheat;64
+      NeededText: 64 Lapis Lazuli, 64 cactus, 64 wheat
+    Level_6:
       Item: GOLD_ORE
       AddsFeature: §9Chance auf Gold
       Needed:
-      - Lapis_Lazuli;128
+      - Copper_Ingot;128
       - Dark_Oak_Log;64
       - Sweet_Berries;64
       - Scute;10
-      NeededText: 128 Lapis Lazuli, 64 Schwarzeichenholzstämme, 64 Süßbeeren, 10 Scute
-    Level_6:
+      NeededText: 128 Kupferbarren, 64 Schwarzeichenholzstämme, 64 Süßbeeren, 10 Scute
+    Level_7:
       Item: EMERALD_ORE
       AddsFeature: §9Chance auf Smaragde
       Needed:
@@ -100,7 +110,7 @@ CobblestoneGenerator:
       - Golden_Apple;2
       - Lava_Bucket;5
       NeededText: 64 Goldbarren, 2 Goldäpfel, 5 Lava-Eimer
-    Level_7:
+    Level_8:
       Item: DIAMOND_ORE
       AddsFeature: §9Chance auf Diamanten
       Needed:
@@ -110,7 +120,7 @@ CobblestoneGenerator:
       - Gold_Ingot;64
       - Emerald;25
       NeededText: 64 Kohle, 64 Eisenbarren, 64 Lapis Lazuli, 64 Goldbarren, 25 Smaragde
-    Level_8:
+    Level_9:
       Item: ANCIENT_DEBRIS
       AddsFeature: §9Chance auf Antiken Schrott
       Needed:

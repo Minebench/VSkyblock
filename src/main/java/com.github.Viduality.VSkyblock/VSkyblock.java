@@ -219,10 +219,11 @@ public class VSkyblock extends JavaPlugin implements Listener {
         addGeneratorLevel("Iron", Material.IRON_ORE, 2, 35, 1.5);
         addGeneratorLevel("Redstone", Material.REDSTONE_ORE, 3, 50, 1.5);
         addGeneratorLevel("Lapis", Material.LAPIS_ORE, 4, 60, 2);
-        addGeneratorLevel("Gold", Material.GOLD_ORE, 5, 80, 1);
-        addGeneratorLevel("Emerald", Material.EMERALD_ORE, 6, 100, 0.05);
-        addGeneratorLevel("Diamond", Material.DIAMOND_ORE, 7, 100, 0.2);
-        addGeneratorLevel("AncientDebris", Material.ANCIENT_DEBRIS, 8, 150, 0.4);
+        addGeneratorLevel("Copper", Material.COPPER_ORE, 5, 70, 1.5);
+        addGeneratorLevel("Gold", Material.GOLD_ORE, 6, 80, 1);
+        addGeneratorLevel("Emerald", Material.EMERALD_ORE, 7, 100, 0.05);
+        addGeneratorLevel("Diamond", Material.DIAMOND_ORE, 8, 100, 0.2);
+        addGeneratorLevel("AncientDebris", Material.ANCIENT_DEBRIS, 9, 150, 0.4);
 
         CobblestoneGenerator.cobbleStoneMultiDrop = ConfigShorts.getDefConfig().getBoolean("CobblestoneGenerator.Cobblestone.MultipleDrops", false);
         CobblestoneGenerator.cobblestoneLevelInterval = ConfigShorts.getDefConfig().getInt("CobblestoneGenerator.Cobblestone.CobblestoneLevelIntervall", 10);
