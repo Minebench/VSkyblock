@@ -60,6 +60,8 @@ public class IslandCacheHandler {
 
     public static Map<String, Location> islandhomes = new HashMap<>();
 
+    public static HashMap<String, Integer> islandlevels = new HashMap<>(); //Islandname and islandlevel
+
     public static int getIsGenCooldown() {
         if (isInt(ConfigShorts.getDefConfig().getString("IslandGenerateCooldown"))) {
             return ConfigShorts.getDefConfig().getInt("IslandGenerateCooldown");

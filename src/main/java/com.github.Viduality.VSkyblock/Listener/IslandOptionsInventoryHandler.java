@@ -307,7 +307,7 @@ public class IslandOptionsInventoryHandler implements Listener {
 
     private ItemStack getCobbleDropChanceInfo(UUID playerUUID) {
         String island = IslandCacheHandler.playerislands.get(playerUUID);
-        Integer currentIslandLevel = CobblestoneGenerator.islandlevels.get(island);
+        Integer currentIslandLevel = IslandCacheHandler.islandlevels.get(island);
         int levelIntervall = CobblestoneGenerator.cobblestoneLevelInterval;
         int maxDrops = currentIslandLevel / levelIntervall + 1;
 

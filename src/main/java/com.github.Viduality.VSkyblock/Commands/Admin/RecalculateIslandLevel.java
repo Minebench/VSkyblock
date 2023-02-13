@@ -21,7 +21,6 @@ package com.github.Viduality.VSkyblock.Commands.Admin;
 import com.github.Viduality.VSkyblock.Utilitys.IslandCacheHandler;
 import com.github.Viduality.VSkyblock.Commands.IslandLevel;
 import com.github.Viduality.VSkyblock.Commands.WorldCommands.AdminSubCommand;
-import com.github.Viduality.VSkyblock.Listener.CobblestoneGenerator;
 import com.github.Viduality.VSkyblock.Utilitys.ConfigShorts;
 import com.github.Viduality.VSkyblock.VSkyblock;
 import org.bukkit.*;
@@ -104,8 +103,8 @@ public class RecalculateIslandLevel implements AdminSubCommand {
                                                 if (!IslandCacheHandler.playerislands.containsValue(islandname)) {
                                                     plugin.getWorldManager().unloadWorld(islandname);
                                                 }
-                                                if (CobblestoneGenerator.islandlevels.containsKey(islandname)) {
-                                                    CobblestoneGenerator.islandlevels.put(islandname, roundlevel);
+                                                if (IslandCacheHandler.islandlevels.containsKey(islandname)) {
+                                                    IslandCacheHandler.islandlevels.put(islandname, roundlevel);
                                                 }
                                             });
 

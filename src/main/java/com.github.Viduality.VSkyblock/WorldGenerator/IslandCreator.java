@@ -130,7 +130,7 @@ public class IslandCreator {
                 IslandCacheHandler.playerislands.put(playerId, worldName);
                 IslandCacheHandler.islandhomes.put(worldName, world.getSpawnLocation());
                 CobblestoneGenerator.islandGenLevel.put(worldName, 0);
-                CobblestoneGenerator.islandlevels.put(worldName, 0);
+                IslandCacheHandler.islandlevels.put(worldName, 0);
                 if (player != null) {
                     player.teleportAsync(world.getSpawnLocation()).thenAccept(b -> {
                         player.getInventory().clear();

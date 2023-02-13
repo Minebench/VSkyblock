@@ -18,6 +18,7 @@ package com.github.Viduality.VSkyblock.Listener;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.github.Viduality.VSkyblock.Utilitys.IslandCacheHandler;
 import com.github.Viduality.VSkyblock.VSkyblock;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -49,7 +50,6 @@ public class CobblestoneGenerator implements Listener {
     public static boolean cobbleStoneMultiDrop = false;
 
     public static HashMap<String, Integer> islandGenLevel = new HashMap<>(); //Islandname and generatorlevel
-    public static HashMap<String, Integer> islandlevels = new HashMap<>(); //Islandname and islandlevel
     public static Cache<Location, Long> cobblegen = CacheBuilder.newBuilder()
             .maximumSize(10000)
             .expireAfterAccess(10, TimeUnit.MINUTES)
@@ -84,8 +84,8 @@ public class CobblestoneGenerator implements Listener {
                         || blockBreakEvent.getBlock().getRelative(BlockFace.EAST).getType().equals(Material.WATER)
                         || blockBreakEvent.getBlock().getRelative(BlockFace.SOUTH).getType().equals(Material.WATER)
                         || blockBreakEvent.getBlock().getRelative(BlockFace.WEST).getType().equals(Material.WATER)) {
-                    if (islandlevels.containsKey(blockBreakEvent.getBlock().getLocation().getWorld().getName())) {
-                        int level = islandlevels.get(blockBreakEvent.getBlock().getLocation().getWorld().getName());
+                    if (IslandCacheHandler.islandlevels.containsKey(blockBreakEvent.getBlock().getLocation().getWorld().getName())) {
+                        int level = IslandCacheHandler.islandlevels.get(blockBreakEvent.getBlock().getLocation().getWorld().getName());
                         if (level >= cobblestoneLevelInterval) {
                             int additionalDropsAmount = rollCobbleAmount(blockBreakEvent.getBlock().getLocation().getWorld().getName());
                             if (additionalDropsAmount != 0) {
@@ -138,7 +138,7 @@ public class CobblestoneGenerator implements Listener {
      */
     private int rollCobbleAmount(String island) {
         double chance = cobblestoneChance / 100;
-        int chances = islandlevels.get(island) / cobblestoneLevelInterval;
+        int chances = IslandCacheHandler.islandlevels.get(island) / cobblestoneLevelInterval;
         int drops = 0;
         for (int i = 0; i < chances; i++) {
             double random = Math.random();

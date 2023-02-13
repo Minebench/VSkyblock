@@ -42,7 +42,7 @@ public class CobblestoneGeneratorUpgrade {
         int nextlevel = currentlevel + 1;
 
         Integer requiredIslandLevel = CobblestoneGenerator.getRequiredIslandLevel(nextlevel);
-        int islandlevel = CobblestoneGenerator.islandlevels.get(IslandCacheHandler.playerislands.get(player.getUniqueId()));
+        int islandlevel = IslandCacheHandler.islandlevels.get(IslandCacheHandler.playerislands.get(player.getUniqueId()));
         if (requiredIslandLevel != null && islandlevel >= requiredIslandLevel) {
             List<Material> neededItems = getneededItems(nextlevel);
             List<Integer> neededAmounts = getneededItemsAmount(nextlevel);

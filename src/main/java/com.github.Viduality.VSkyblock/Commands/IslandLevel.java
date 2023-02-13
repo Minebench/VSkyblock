@@ -19,8 +19,8 @@ package com.github.Viduality.VSkyblock.Commands;
  */
 
 import com.github.Viduality.VSkyblock.DefaultFiles;
-import com.github.Viduality.VSkyblock.Listener.CobblestoneGenerator;
 import com.github.Viduality.VSkyblock.Utilitys.ConfigShorts;
+import com.github.Viduality.VSkyblock.Utilitys.IslandCacheHandler;
 import com.github.Viduality.VSkyblock.Utilitys.PlayerInfo;
 import com.github.Viduality.VSkyblock.VSkyblock;
 import com.google.common.cache.Cache;
@@ -130,7 +130,7 @@ public class IslandLevel extends PlayerSubCommand {
                                 int roundlevel = (int) Math.floor(level);
                                 plugin.getDb().getWriter().updateIslandLevel(playerInfo.getIslandId(), roundlevel, c.blocks, player.getUniqueId());
                                 ConfigShorts.custommessagefromString("NewIslandLevel", player, String.valueOf(roundlevel));
-                                CobblestoneGenerator.islandlevels.put(playerInfo.getIslandName(), roundlevel);
+                                IslandCacheHandler.islandlevels.put(playerInfo.getIslandName(), roundlevel);
                             });
 
                             // Two loops are necessary as getChunkAtAsync might return instantly if chunk is loaded

@@ -410,7 +410,7 @@ public class DatabaseReader {
                     if (finalIslandname != null && !finalIslandname.equals("NULL")) {
                         IslandCacheHandler.playerislands.put(player.getUniqueId(), finalIslandname);
                         CobblestoneGenerator.islandGenLevel.put(finalIslandname, finalCobblestonelevel);
-                        CobblestoneGenerator.islandlevels.put(finalIslandname, finalIslandlevel);
+                        IslandCacheHandler.islandlevels.put(finalIslandname, finalIslandlevel);
                     }
                 }
             });
@@ -444,7 +444,7 @@ public class DatabaseReader {
                 if (resultSet1.next()) {
                     islandlevel = resultSet1.getInt("islandlevel");
                 }
-                CobblestoneGenerator.islandlevels.put(islandname, islandlevel);
+                IslandCacheHandler.islandlevels.put(islandname, islandlevel);
                 preparedStatementGetIslandLevel.close();
 
 
