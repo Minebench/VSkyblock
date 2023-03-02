@@ -38,6 +38,7 @@ public class SQLConnector {
         databaseReader = new DatabaseReader(plugin, this);
         databaseWriter = new DatabaseWriter(plugin, this);
         HikariConfig config = new HikariConfig();
+        config.setPoolName(plugin.getName() + "-hikari");
         config.setJdbcUrl("jdbc:mysql://" + getDbUrl() + "/" + getDatabase());
         config.setUsername(getDbUser());
         config.setPassword(getDbPassword());
