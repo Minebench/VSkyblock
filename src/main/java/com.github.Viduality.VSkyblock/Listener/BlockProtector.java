@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 
@@ -65,6 +66,15 @@ public class BlockProtector implements Listener {
             if (!(player.getWorld().getEnvironment().equals(World.Environment.NETHER) || player.getWorld().getName().equals(IslandCacheHandler.playerislands.get(player.getUniqueId())))) {
                 playerBucketFillEvent.setCancelled(true);
                 ConfigShorts.messagefromString("BlockBreak", player);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerFrostWalk(EntityBlockFormEvent entityBlockFormEvent) {
+        if (entityBlockFormEvent.getEntity() instanceof Player player) {
+            if (!(player.getWorld().getEnvironment().equals(World.Environment.NETHER) || player.getWorld().getName().equals(IslandCacheHandler.playerislands.get(player.getUniqueId())))) {
+                entityBlockFormEvent.setCancelled(true);
             }
         }
     }
