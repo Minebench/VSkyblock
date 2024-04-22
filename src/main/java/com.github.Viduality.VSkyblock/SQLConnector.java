@@ -157,6 +157,7 @@ public class SQLConnector {
                             + "visitneedsrequest BOOLEAN NOT NULL DEFAULT FALSE,"
                             + "cobblestonelevel BIGINT DEFAULT 0,"
                             + "totalblocks BIGINT DEFAULT 140,"
+                            + "totalentities BIGINT DEFAULT 0,"
                             + "PRIMARY KEY (islandid))");
             connection.createStatement().execute(
                     "CREATE TABLE IF NOT EXISTS VSkyblock_IslandLocations("
@@ -194,6 +195,7 @@ public class SQLConnector {
             connection.createStatement().execute(
                     "ALTER TABLE VSkyblock_Island ADD COLUMN IF NOT EXISTS("
                     + "visitneedsrequest BOOLEAN NOT NULL DEFAULT FALSE,"
+                    + "totalentities BIGINT DEFAULT 0,"
                     + "totalblocks BIGINT DEFAULT 140);"
             );
             connection.createStatement().execute(

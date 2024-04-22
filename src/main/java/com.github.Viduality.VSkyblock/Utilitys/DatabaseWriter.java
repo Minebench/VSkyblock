@@ -322,14 +322,15 @@ public class DatabaseWriter {
      * @param islandid
      * @param level
      */
-    public void updateIslandLevel(int islandid, Integer level, Integer totalblocks, UUID uuid) {
+    public void updateIslandLevel(int islandid, Integer level, Integer totalblocks, Integer totalentities, UUID uuid) {
         connector.getReader().getIslandMembers(islandid, result -> plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try (Connection connection = connector.getConnection()) {
                 PreparedStatement updateChallengeCount;
-                updateChallengeCount = connection.prepareStatement("UPDATE VSkyblock_Island SET islandlevel = ?, totalblocks = ? WHERE islandid = ?");
+                updateChallengeCount = connection.prepareStatement("UPDATE VSkyblock_Island SET islandlevel = ?, totalblocks = ?, totalentities = ?, WHERE islandid = ?");
                 updateChallengeCount.setInt(1, level);
                 updateChallengeCount.setInt(2, totalblocks);
-                updateChallengeCount.setInt(3, islandid);
+                updateChallengeCount.setInt(3, totalentities);
+                updateChallengeCount.setInt(4, islandid);
                 updateChallengeCount.executeUpdate();
                 updateChallengeCount.close();
 

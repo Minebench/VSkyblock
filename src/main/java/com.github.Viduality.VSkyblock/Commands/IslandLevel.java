@@ -33,6 +33,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -128,7 +129,7 @@ public class IslandLevel extends PlayerSubCommand {
                                 }
 
                                 int roundlevel = (int) Math.floor(level);
-                                plugin.getDb().getWriter().updateIslandLevel(playerInfo.getIslandId(), roundlevel, c.blocks, player.getUniqueId());
+                                plugin.getDb().getWriter().updateIslandLevel(playerInfo.getIslandId(), roundlevel, c.blocks, c.entities, player.getUniqueId());
                                 ConfigShorts.custommessagefromString("NewIslandLevel", player, String.valueOf(roundlevel));
                                 IslandCacheHandler.islandlevels.put(playerInfo.getIslandName(), roundlevel);
                             });
@@ -200,6 +201,7 @@ public class IslandLevel extends PlayerSubCommand {
     public static class IslandCounter {
         public double value;
         public int blocks;
+        public int entities;
         private int toCount = 0;
         private final Consumer<IslandCounter> onDone;
 
@@ -234,6 +236,15 @@ public class IslandLevel extends PlayerSubCommand {
                             value = value + DefaultFiles.blockvalues.getOrDefault(block.getType(), 0D);
                         }
                     }
+                }
+
+                for (Entity entity : chunk.getEntities()) {
+                    if(!entity.isPersistent() || entity.isDead() || entity instanceof Player) {
+                        continue;
+                    }
+
+                    entities = entities + 1;
+                    value = value + DefaultFiles.entityvalues.getOrDefault(entity.getType(), 0D);
                 }
             }
             if (--toCount == 0) {
