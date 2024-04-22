@@ -98,7 +98,7 @@ public class RecalculateIslandLevel implements AdminSubCommand {
                                                 }
 
                                                 int roundlevel = (int) Math.floor(level);
-                                                plugin.getDb().getWriter().updateIslandLevel(islandid, roundlevel, c.blocks, p.getUniqueId());
+                                                plugin.getDb().getWriter().updateIslandLevel(islandid, roundlevel, c.blocks, c.entities, p.getUniqueId());
                                                 ConfigShorts.custommessagefromString("NewIslandLevel", sender, String.valueOf(roundlevel));
                                                 if (!IslandCacheHandler.playerislands.containsValue(islandname)) {
                                                     plugin.getWorldManager().unloadWorld(islandname);
