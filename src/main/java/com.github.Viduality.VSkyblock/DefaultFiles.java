@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.EnumMap;
 import java.util.Map;
+import org.bukkit.entity.EntityType;
 
 public class DefaultFiles {
 
@@ -17,6 +18,7 @@ public class DefaultFiles {
     private static VSkyblock plugin = VSkyblock.getInstance();
 
     public static Map<Material, Double> blockvalues = new EnumMap<>(Material.class);
+    public static Map<EntityType, Double> entityvalues = new EnumMap<>(EntityType.class);
 
     /**
      * Check default Files
@@ -25,8 +27,10 @@ public class DefaultFiles {
     public static void init() {
         saveDefaultConfig("Worlds.yml");
         saveDefaultConfig("BlockValues.yml");
+        saveDefaultConfig("EntityValues.yml");
 
         reloadBlockValues();
+        reloadEntityValues();
 
 
     }
@@ -99,6 +103,39 @@ public class DefaultFiles {
 
         } catch (Exception e) {
             plugin.getLogger().info("Problem reading block values file.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void reloadEntityValues() {
+        File configFile = new File(plugin.getDataFolder(), "EntityValues.yml");
+        if (!configFile.exists()) {
+            plugin.getLogger().info("EntityValues.yml does not exist!");
+            return;
+        }
+        if (!entityvalues.isEmpty()) {
+            entityvalues.clear();
+        }
+        FileConfiguration entityValuesConfig = new YamlConfiguration();
+        try {
+            entityValuesConfig.load(configFile);
+
+            for (String configString : entityValuesConfig.getKeys(false)) {
+                String entity = configString.toUpperCase();
+                if (EntityType.valueOf(entity) != null) {
+                    double value = entityValuesConfig.getDouble(configString, -1);
+                    if (value > -1) {
+                        entityvalues.put(EntityType.valueOf(entity), value);
+                    } else {
+                        plugin.getLogger().info("Entity: " + entity + " has an invalid block value (" + entityValuesConfig.get(configString) + ")");
+                    }
+                } else {
+                    plugin.getLogger().info("Entity string " + configString + " is not a valid entity!");
+                }
+            }
+
+        } catch (Exception e) {
+            plugin.getLogger().info("Problem reading entity values file.");
             e.printStackTrace();
         }
     }
