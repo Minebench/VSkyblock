@@ -194,9 +194,9 @@ public class ChallengesCreator {
 
     private Challenge.ChallengeType getChallengeType(String challengeType) {
         switch (challengeType.toUpperCase()) {
-            case "ONPLAYER": return Challenge.ChallengeType.onPlayer;
-            case "ONISLAND": return Challenge.ChallengeType.onIsland;
-            case "ISLANDLEVEL": return Challenge.ChallengeType.islandLevel;
+            case "ONPLAYER": return Challenge.ChallengeType.ON_PLAYER;
+            case "ONISLAND": return Challenge.ChallengeType.ON_ISLAND;
+            case "ISLANDLEVEL": return Challenge.ChallengeType.ISLAND_LEVEL;
             default: return null;
         }
     }
@@ -281,16 +281,16 @@ public class ChallengesCreator {
         challenge.getSlot() != null &&
         challenge.getRewards() != null) {
             switch (challenge.getChallengeType()) {
-                case islandLevel:
+                case ISLAND_LEVEL:
                     if (challenge.getNeededLevel() != null) {
                         return true;
                     }
-                case onIsland:
+                case ON_ISLAND:
                     if (challenge.getNeededItems() != null &&
                         challenge.getRadius() != null) {
                         return true;
                     }
-                case onPlayer:
+                case ON_PLAYER:
                     if (challenge.getNeededItems() != null &&
                     challenge.getRepeatRewards() != null &&
                     challenge.getRepeatRewardText() != null) {

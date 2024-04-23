@@ -107,13 +107,13 @@ public class ConfigShorts {
         lore.add(ChallengesInventoryCreator.loreString);
         lore.addAll(splitString(challenge.getDescription(), ChallengesInventoryCreator.descriptioncolor));
         switch (challenge.getChallengeType()) {
-            case onPlayer:
+            case ON_PLAYER:
                 lore.add(ChallengesInventoryCreator.neededonPlayer);
                 break;
-            case onIsland:
+            case ON_ISLAND:
                 lore.add(ChallengesInventoryCreator.neededonIsland);
                 break;
-            case islandLevel:
+            case ISLAND_LEVEL:
                 lore.add(ChallengesInventoryCreator.neededislandlevel);
                 break;
         }

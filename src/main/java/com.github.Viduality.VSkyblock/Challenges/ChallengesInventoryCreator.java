@@ -210,20 +210,20 @@ public class ChallengesInventoryCreator {
         lore.add(loreString);
         lore.addAll(splitString(challenge.getDescription(), descriptioncolor));
         switch (challenge.getChallengeType()) {
-            case onPlayer:
+            case ON_PLAYER:
                 lore.add(neededonPlayer);
                 break;
-            case onIsland:
+            case ON_ISLAND:
                 lore.add(neededonIsland);
                 break;
-            case islandLevel:
+            case ISLAND_LEVEL:
                 lore.add(neededislandlevel);
                 break;
         }
         lore.addAll(splitString(challenge.getNeededText(), descriptioncolor));
 
         lore.add(reward);
-        if (challenge.getChallengeType().equals(Challenge.ChallengeType.onPlayer)) {
+        if (challenge.getChallengeType().equals(Challenge.ChallengeType.ON_PLAYER)) {
             if (challengeCount != 0) {
                 lore.addAll(splitString(challenge.getRepeatRewardText(), descriptioncolor));
             } else {
@@ -235,8 +235,8 @@ public class ChallengesInventoryCreator {
 
 
 
-        if (challenge.getChallengeType().equals(Challenge.ChallengeType.onIsland) ||
-                challenge.getChallengeType().equals(Challenge.ChallengeType.islandLevel)) {
+        if (challenge.getChallengeType().equals(Challenge.ChallengeType.ON_ISLAND) ||
+                challenge.getChallengeType().equals(Challenge.ChallengeType.ISLAND_LEVEL)) {
             if (challengeCount != 0) {
                 lore.add("");
                 lore.add(ChatColor.DARK_RED + notRepeatable);

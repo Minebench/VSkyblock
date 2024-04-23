@@ -30,11 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ChallengesManager {
@@ -55,7 +51,7 @@ public class ChallengesManager {
             .expireAfterWrite(5, TimeUnit.SECONDS)
             .build();
     
-    private VSkyblock plugin;
+    private final VSkyblock plugin;
 
     private final ChallengesInventoryCreator inventoryCreator;
 
@@ -76,25 +72,17 @@ public class ChallengesManager {
      */
     public void checkChallenge(Challenge challenge, Player player, Inventory inv, int challengeSlot) {
         plugin.getDb().getReader().getIslandIdFromPlayer(player.getUniqueId(), (islandid) -> plugin.getDb().getReader().getIslandChallenges(islandid, (islandChallenges) -> {
-            boolean repeat = false;
-            if (islandChallenges.getChallengeCount(challenge.getMySQLKey()) != 0) {
-                repeat = true;
-            }
+            boolean repeat = islandChallenges.getChallengeCount(challenge.getMySQLKey()) != 0;
 
-            if (challenge.getChallengeType().equals(Challenge.ChallengeType.onPlayer)) {
-                List<ItemStack> rewards;
-                if (repeat) {
-                    rewards = challenge.getRepeatRewards();
-                } else {
-                    rewards = challenge.getRewards();
-                }
+            if (challenge.getChallengeType().equals(Challenge.ChallengeType.ON_PLAYER)) {
                 boolean enoughItems = true;
                 for (ItemStack i : challenge.getNeededItems()) {
                     int neededamount = i.getAmount();
                     for (int slot = 0; slot < player.getInventory().getSize(); slot++) {
-                        if (player.getInventory().getItem(slot) != null) {
-                            if (player.getInventory().getItem(slot).getType().equals(i.getType())) {
-                                neededamount = neededamount - player.getInventory().getItem(slot).getAmount();
+                        ItemStack item = player.getInventory().getItem(slot);
+                        if (item != null) {
+                            if (item.getType().equals(i.getType())) {
+                                neededamount = neededamount - item.getAmount();
                             }
                         }
                     }
@@ -106,8 +94,13 @@ public class ChallengesManager {
                     enoughItems = true;
                 }
                 if (enoughItems) {
-                    List<Integer> emptySlots = getEmptySlots(player.getInventory());
-                    if (emptySlots.size() >= rewards.size()) {
+                    List<ItemStack> rewards;
+                    if (repeat) {
+                        rewards = challenge.getRepeatRewards();
+                    } else {
+                        rewards = challenge.getRewards();
+                    }
+                    if (getEmptySlotCount(player.getInventory(), challenge.getNeededItems()) >= rewards.size()) {
                         if (!player.getGameMode().equals(GameMode.CREATIVE)) {
                             clearItems(player.getInventory(), challenge.getNeededItems());
                         }
@@ -116,21 +109,10 @@ public class ChallengesManager {
                         inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                         unTrack(challenge, player);
                         if (!repeat) {
-                            ConfigShorts.broadcastChallengeCompleted("ChallengeComplete", player.getName(), challenge);
-                            if (ConfigShorts.getDefConfig().isConfigurationSection("ChallengeCompleteFirst")) {
-                                try {
-                                    Sound sound = Sound.valueOf(ConfigShorts.getDefConfig().getString("ChallengeCompleteFirst.Sound").toUpperCase());
-                                    float pitch = (float) ConfigShorts.getDefConfig().getDouble("ChallengeCompleteFirst.Pitch");
-                                    for (Player p : player.getWorld().getPlayers()) {
-                                        p.playSound(p.getLocation(), sound, 1, pitch);
-                                    }
-                                } catch (IllegalArgumentException e) {
-                                    VSkyblock.getInstance().getLogger().warning("ChallengeCompleteFirst sound is invalid! " + e.getMessage());
-                                }
-                            }
+                            notifyChallengeCompleteFirst(challenge, player);
                         } else if (ConfigShorts.getDefConfig().isConfigurationSection("ChallengeComplete")) {
                             try {
-                                Sound sound = Sound.valueOf(ConfigShorts.getDefConfig().getString("ChallengeComplete.Sound").toUpperCase());
+                                Sound sound = Sound.valueOf(ConfigShorts.getDefConfig().getString("ChallengeComplete.Sound", "SoundNotFound").toUpperCase());
                                 float pitch = (float) ConfigShorts.getDefConfig().getDouble("ChallengeComplete.Pitch");
                                 player.playSound(player.getLocation(), sound, 1, pitch);
                             } catch (IllegalArgumentException e) {
@@ -145,26 +127,15 @@ public class ChallengesManager {
                     ConfigShorts.messagefromString("NotEnoughItems", player);
                     player.closeInventory();
                 }
-            } else if (challenge.getChallengeType().equals(Challenge.ChallengeType.islandLevel)) {
+            } else if (challenge.getChallengeType().equals(Challenge.ChallengeType.ISLAND_LEVEL)) {
                 if (!repeat) {
                     if (!islandLevelDelay.asMap().containsKey(player.getUniqueId())) {
                         islandLevelDelay.put(player.getUniqueId(), 1);
                         plugin.getDb().getReader().getIslandLevelFromUuid(player.getUniqueId(), (islandLevel) -> {
                             if (islandLevel >= challenge.getNeededLevel()) {
-                                if (getEmptySlots(player.getInventory()).size() >= challenge.getRewards().size()) {
+                                if (getEmptySlotCount(player.getInventory(), Collections.emptyList()) >= challenge.getRewards().size()) {
                                     giveRewards(player.getInventory(), challenge.getRewards());
-                                    ConfigShorts.broadcastChallengeCompleted("ChallengeComplete", player.getName(), challenge);
-                                    if (ConfigShorts.getDefConfig().isConfigurationSection("ChallengeCompleteFirst")) {
-                                        try {
-                                            Sound sound = Sound.valueOf(ConfigShorts.getDefConfig().getString("ChallengeCompleteFirst.Sound").toUpperCase());
-                                            float pitch = (float) ConfigShorts.getDefConfig().getDouble("ChallengeCompleteFirst.Pitch");
-                                            for (Player p : player.getWorld().getPlayers()) {
-                                                p.playSound(p.getLocation(), sound, 1, pitch);
-                                            }
-                                        } catch (IllegalArgumentException e) {
-                                            VSkyblock.getInstance().getLogger().warning("ChallengeCompleteFirst sound is invalid! " + e.getMessage());
-                                        }
-                                    }
+                                    notifyChallengeCompleteFirst(challenge, player);
                                     plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1);
                                     inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                                 } else {
@@ -181,7 +152,7 @@ public class ChallengesManager {
                     ConfigShorts.messagefromString("ChallengeNotRepeatable", player);
                     inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                 }
-            } else if (challenge.getChallengeType().equals(Challenge.ChallengeType.onIsland)) {
+            } else if (challenge.getChallengeType().equals(Challenge.ChallengeType.ON_ISLAND)) {
                 if (!repeat) {
                     if (!onIslandDelay.asMap().containsKey(player.getUniqueId())) {
                         onIslandDelay.put(player.getUniqueId(), 1);
@@ -190,9 +161,9 @@ public class ChallengesManager {
                         HashMap<Material, Integer> result = getBlocks(player, challenge.getRadius());
 
                         boolean enoughItems = true;
-                        for (ItemStack i : challenge.getNeededItems()) {
-                            if (result.containsKey(i.getType())) {
-                                if (result.get(i.getType()) < i.getAmount()) {
+                        for (ItemStack stack : challenge.getNeededItems()) {
+                            if (result.containsKey(stack.getType())) {
+                                if (result.get(stack.getType()) < stack.getAmount()) {
                                     enoughItems = false;
                                 }
                             } else {
@@ -200,20 +171,9 @@ public class ChallengesManager {
                             }
                         }
                         if (enoughItems) {
-                            if (getEmptySlots(player.getInventory()).size() >= challenge.getRewards().size()) {
+                            if (getEmptySlotCount(player.getInventory(), challenge.getNeededItems()) >= challenge.getRewards().size()) {
                                 giveRewards(player.getInventory(), challenge.getRewards());
-                                ConfigShorts.broadcastChallengeCompleted("ChallengeComplete", player.getName(), challenge);
-                                if (ConfigShorts.getDefConfig().isConfigurationSection("ChallengeCompleteFirst")) {
-                                    try {
-                                        Sound sound = Sound.valueOf(ConfigShorts.getDefConfig().getString("ChallengeCompleteFirst.Sound").toUpperCase());
-                                        float pitch = (float) ConfigShorts.getDefConfig().getDouble("ChallengeCompleteFirst.Pitch");
-                                        for (Player p : player.getWorld().getPlayers()) {
-                                            p.playSound(p.getLocation(), sound, 1, pitch);
-                                        }
-                                    } catch (IllegalArgumentException e) {
-                                        VSkyblock.getInstance().getLogger().warning("ChallengeCompleteFirst sound is invalid! " + e.getMessage());
-                                    }
-                                }
+                                notifyChallengeCompleteFirst(challenge, player);
                                 plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1);
                                 inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                             } else {
@@ -233,25 +193,40 @@ public class ChallengesManager {
         }));
     }
 
+    public void notifyChallengeCompleteFirst(Challenge challenge, Player player) {
+        ConfigShorts.broadcastChallengeCompleted("ChallengeComplete", player.getName(), challenge);
+        if (ConfigShorts.getDefConfig().isConfigurationSection("ChallengeCompleteFirst")) {
+            try {
+                Sound sound = Sound.valueOf(ConfigShorts.getDefConfig().getString("ChallengeCompleteFirst.Sound").toUpperCase());
+                float pitch = (float) ConfigShorts.getDefConfig().getDouble("ChallengeCompleteFirst.Pitch");
+                for (Player p : player.getWorld().getPlayers()) {
+                    p.playSound(p.getLocation(), sound, 1, pitch);
+                }
+            } catch (IllegalArgumentException e) {
+                VSkyblock.getInstance().getLogger().warning("ChallengeCompleteFirst sound is invalid! " + e.getMessage());
+            }
+        }
+    }
+
     /**
      * Removes a given list of item stacks from the given inventory.
      * @param inv    The inventory.
      * @param items  The list of items to be removed
      */
     private void clearItems(Inventory inv, List<ItemStack> items) {
-        for (ItemStack i : items) {
-            int amount = i.getAmount();
+        for (ItemStack itemToRemove : items) {
+            int amount = itemToRemove.getAmount();
             for (int slot = 0; slot < inv.getSize(); slot++) {
-                ItemStack is = inv.getItem(slot);
-                if (is != null) {
-                    if (is.getType().equals(i.getType())) {
-                        int newAmount = is.getAmount() - amount;
+                ItemStack stackInInv = inv.getItem(slot);
+                if (stackInInv != null) {
+                    if (stackInInv.getType().equals(itemToRemove.getType())) {
+                        int newAmount = stackInInv.getAmount() - amount;
                         if (newAmount > 0) {
-                            is.setAmount(newAmount);
+                            stackInInv.setAmount(newAmount);
                             break;
                         } else {
                             inv.clear(slot);
-                            amount = amount - is.getAmount();
+                            amount = amount - stackInInv.getAmount();
                             if (amount == 0) {
                                 break;
                             }
@@ -260,6 +235,34 @@ public class ChallengesManager {
                 }
             }
         }
+    }
+
+    /**
+     * Counts how many slots would be freed up when the required items are removed
+     * @param inv    The inventory
+     * @param items  The list of items that would be removed
+     */
+    private int countExtraFreeSlots(Inventory inv, List<ItemStack> items) {
+        int freeSlots = 0;
+        for (ItemStack itemToRemove : items) {
+            int amount = itemToRemove.getAmount();
+            for (int slot = 0; slot < inv.getSize(); slot++) {
+                ItemStack stackInInv = inv.getItem(slot);
+                if (stackInInv != null) {
+                    if (stackInInv.getType().equals(itemToRemove.getType())) {
+                        int newAmount = stackInInv.getAmount() - amount;
+                        if (newAmount <= 0) {
+                            freeSlots++;
+                            amount = amount - stackInInv.getAmount();
+                            if (amount == 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return freeSlots;
     }
 
     /**
@@ -275,19 +278,19 @@ public class ChallengesManager {
     }
 
     /**
-     * Returns a list of all empty slots in the inventory of a player.
+     * Returns the amount empty slots in an inventory.
      *
-     * @param inv
-     * @return Empty inventory slot numbers.
+     * @param inv The inventory to search in
      */
-    private List<Integer> getEmptySlots(Inventory inv) {
-        List<Integer> emptySlots = new ArrayList<>();
+    private int getEmptySlotCount(Inventory inv, List<ItemStack> items) {
+        int counter = 0;
         for (int currentSlot = 0; currentSlot < 36; currentSlot++) {
             if (inv.getItem(currentSlot) == null) {
-                emptySlots.add(currentSlot);
+                counter++;
             }
         }
-        return emptySlots;
+        counter += countExtraFreeSlots(inv, items);
+        return counter;
     }
 
     /**
