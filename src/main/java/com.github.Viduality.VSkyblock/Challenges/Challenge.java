@@ -175,6 +175,6 @@ public class Challenge {
     }
 
     public enum ChallengeType {
-        onPlayer, onIsland, islandLevel
+        ON_PLAYER, ON_ISLAND, ISLAND_LEVEL
     }
 }
