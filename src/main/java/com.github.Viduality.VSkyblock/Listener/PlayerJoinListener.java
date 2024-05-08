@@ -74,8 +74,8 @@ public class PlayerJoinListener implements Listener {
                     }
                 }
                 if (result.getIslandName() != null) {
-                    PotionEffect potionEffectBlindness = new PotionEffect(PotionEffectType.BLINDNESS, 600, 1);
-                    PotionEffect potionEffectNightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 600, 1);
+                    PotionEffect potionEffectBlindness = new PotionEffect(PotionEffectType.BLINDNESS, 600, 1, true, false);
+                    PotionEffect potionEffectNightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 600, 1, true, false);
                     player.addPotionEffect(potionEffectBlindness);
                     player.addPotionEffect(potionEffectNightVision);
                     Location location = player.getLocation();
