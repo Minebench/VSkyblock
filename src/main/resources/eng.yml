@@ -150,3 +150,16 @@ WorldListHeader: '§bVSkyblock worlds:'
 WorldLoaded: §bWorld loaded successfully!
 WorldNotFound: §cWorld §6%replacement% §cnot found!
 WorldUnloaded: §bWorld unloaded successfully!
+
+IslandInfoLoading: §aLoading your island's information...
+#Supports '&' Chat colors
+IslandInfoLabelAge: '&e&lIsland Age&7: &a'
+IslandInfoLabelSize: '&e&lIsland Size&7: &a'
+IslandInfoLabelSizeUnits: '&ablocks'
+IslandInfoLabelDifficulty: '&e&lIsland Difficulty&7: &a'
+IslandInfoLabelTotalMembers: '&e&lIsland Total Members&7: &a'
+IslandInfoLabelZBorder: '&e&lIsland Z Border&7: &a'
+IslandInfoLabelXBorder: '&e&lIsland X Border&7: &a'
+IslandInfoLabelLevel: '&e&lIsland Level&7: &a'
+IslandInfoLabelProgress: '&e&lLevel Progress&7: &a'
+IslandInfoLabelChallenges: '&e&lChallenges Completed&7: &a'

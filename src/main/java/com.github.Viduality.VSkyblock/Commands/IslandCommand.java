@@ -56,6 +56,7 @@ public class IslandCommand extends PlayerSubCommand {
         registerSubCommand(new IslandSetOwner(plugin));
         registerSubCommand(new IslandVisit(plugin));
         registerSubCommand(new IslandConfirm(plugin));
+        registerSubCommand(new IslandInfo(plugin));
     }
 
     @Override
