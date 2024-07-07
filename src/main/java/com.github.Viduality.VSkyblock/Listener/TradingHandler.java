@@ -13,14 +13,14 @@ import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public class TradingHandler implements Listener {
 
-    private static final Map<Material, Function<Location, Boolean>> TRADE_LIMITER_MAP = new EnumMap<>(Material.class);
+    private static final Map<Material, Function<Location, Boolean>> TRADE_LIMITER_MAP = new HashMap<>();
 
     static {
         TRADE_LIMITER_MAP.put(Material.POINTED_DRIPSTONE,

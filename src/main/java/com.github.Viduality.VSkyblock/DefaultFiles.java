@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.entity.EntityType;
 
@@ -17,8 +17,8 @@ public class DefaultFiles {
 
     private static VSkyblock plugin = VSkyblock.getInstance();
 
-    public static Map<Material, Double> blockvalues = new EnumMap<>(Material.class);
-    public static Map<EntityType, Double> entityvalues = new EnumMap<>(EntityType.class);
+    public static Map<Material, Double> blockvalues = new HashMap<>();
+    public static Map<EntityType, Double> entityvalues = new HashMap<>();
 
     /**
      * Check default Files

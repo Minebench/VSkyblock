@@ -1,16 +1,14 @@
 package com.github.Viduality.VSkyblock.Listener;
 
+import com.destroystokyo.paper.MaterialTags;
 import com.github.Viduality.VSkyblock.Utilitys.IslandCacheHandler;
 import com.github.Viduality.VSkyblock.VSkyblock;
 import org.bukkit.GameRule;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.EnumSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class PhantomSpawn implements Listener {
@@ -21,7 +19,7 @@ public class PhantomSpawn implements Listener {
     public void onBedPlace(BlockPlaceEvent blockPlaceEvent) {
         Player player = blockPlaceEvent.getPlayer();
         UUID uuid = player.getUniqueId();
-        if (beds.contains(blockPlaceEvent.getBlockPlaced().getType())) {
+        if (MaterialTags.BEDS.isTagged(blockPlaceEvent.getBlockPlaced())) {
             if (player.getWorld().getName().equals(IslandCacheHandler.playerislands.get(uuid))) {
                 if (!plugin.getServer().getWorld(IslandCacheHandler.playerislands.get(uuid)).getGameRuleValue(GameRule.DO_INSOMNIA)) {
                     plugin.getServer().getWorld(IslandCacheHandler.playerislands.get(uuid)).setGameRule(GameRule.DO_INSOMNIA, true);
@@ -29,22 +27,4 @@ public class PhantomSpawn implements Listener {
             }
         }
     }
-
-    private final Set<Material> beds = EnumSet.of(
-            Material.BLACK_BED,
-            Material.BLUE_BED,
-            Material.BROWN_BED,
-            Material.CYAN_BED,
-            Material.GREEN_BED,
-            Material.LIGHT_BLUE_BED,
-            Material.LIGHT_GRAY_BED,
-            Material.LIME_BED,
-            Material.MAGENTA_BED,
-            Material.ORANGE_BED,
-            Material.PINK_BED,
-            Material.PURPLE_BED,
-            Material.RED_BED,
-            Material.WHITE_BED,
-            Material.YELLOW_BED
-    );
 }
