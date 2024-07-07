@@ -18,6 +18,7 @@ package com.github.Viduality.VSkyblock.Commands;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.destroystokyo.paper.MaterialSetTag;
 import com.github.Viduality.VSkyblock.DefaultFiles;
 import com.github.Viduality.VSkyblock.Utilitys.ConfigShorts;
 import com.github.Viduality.VSkyblock.Utilitys.IslandCacheHandler;
@@ -27,14 +28,21 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -199,6 +207,15 @@ public class IslandLevel extends PlayerSubCommand {
     }
 
     public static class IslandCounter {
+        private static final MaterialSetTag CONTAINERS = new MaterialSetTag(new NamespacedKey(VSkyblock.getInstance(), "containers"),
+                Material.CHEST,
+                Material.TRAPPED_CHEST,
+                Material.DISPENSER,
+                Material.DROPPER,
+                Material.HOPPER,
+                Material.BARREL
+        );
+
         public double value;
         public int blocks;
         public int entities;
@@ -226,29 +243,52 @@ public class IslandLevel extends PlayerSubCommand {
                     for (int z = 0; z < 16; z++) {
                         for (int y = 0; y < 256; y++) {
                             Block block = chunk.getBlock(x, y, z);
-                            if (block.getType() == Material.AIR || block.getType() == Material.VOID_AIR) {
+                            Material type = block.getType();
+                            if (type.isAir()) {
                                 continue;
                             }
-                            if (Tag.LEAVES.isTagged(block.getType()) && !((Leaves) block.getBlockData()).isPersistent()) {
+                            if (Tag.LEAVES.isTagged(type) && !((Leaves) block.getBlockData()).isPersistent()) {
                                 continue;
                             }
                             blocks = blocks + 1;
-                            value = value + DefaultFiles.blockvalues.getOrDefault(block.getType(), 0D);
+                            value += DefaultFiles.blockvalues.getOrDefault(type, 0D);
+
+                            if (CONTAINERS.isTagged(type) || Tag.SHULKER_BOXES.isTagged(type)) {
+                                BlockState state = block.getState(false);
+                                if (state instanceof InventoryHolder inventoryHolder) {
+                                    count(inventoryHolder.getInventory());
+                                }
+                            }
                         }
                     }
                 }
 
                 for (Entity entity : chunk.getEntities()) {
-                    if(!entity.isPersistent() || entity.isDead() || entity instanceof Player) {
+                    if (!entity.isPersistent() || entity.isDead()) {
                         continue;
                     }
 
-                    entities = entities + 1;
-                    value = value + DefaultFiles.entityvalues.getOrDefault(entity.getType(), 0D);
+                    if (entity instanceof Item item && !item.getItemStack().isEmpty()) {
+                        entities++;
+                        value += DefaultFiles.blockvalues.getOrDefault(item.getItemStack().getType(), 0D);
+                    } else if (entity instanceof InventoryHolder inventoryHolder) {
+                        count(inventoryHolder.getInventory());
+                    } else {
+                        entities++;
+                        value += DefaultFiles.entityvalues.getOrDefault(entity.getType(), 0D);
+                    }
                 }
             }
             if (--toCount == 0) {
                 onDone.accept(this);
+            }
+        }
+
+        private void count(Inventory inventory) {
+            for (ItemStack item : inventory.getContents()) {
+                if (item != null && !item.isEmpty()) {
+                    value += DefaultFiles.blockvalues.getOrDefault(item.getType(), 0D) * item.getAmount();
+                }
             }
         }
     }
