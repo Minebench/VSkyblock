@@ -18,6 +18,7 @@ package com.github.Viduality.VSkyblock.Utilitys;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.github.Viduality.VSkyblock.Commands.IslandLevel;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.bukkit.Location;
@@ -62,6 +63,8 @@ public class IslandCacheHandler {
 
     public static HashMap<String, Integer> islandlevels = new HashMap<>(); //Islandname and islandlevel
 
+    public static Map<String, IslandLevel.IslandCounter> islandCounts = new HashMap<>();
+
     public static int getIsGenCooldown() {
         if (isInt(ConfigShorts.getDefConfig().getString("IslandGenerateCooldown"))) {
             return ConfigShorts.getDefConfig().getInt("IslandGenerateCooldown");
@@ -85,5 +88,10 @@ public class IslandCacheHandler {
             return false;
         }
         return true;
+    }
+
+    public static void invalidate(String island) {
+        islandhomes.remove(island);
+        islandCounts.remove(island);
     }
 }

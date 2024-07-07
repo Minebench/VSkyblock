@@ -108,6 +108,7 @@ public class VSkyblock extends JavaPlugin implements Listener {
         pm.registerEvents(new CobblestoneGeneratorInventoryHandler(this), this);
         pm.registerEvents(new PhantomSpawn(), this);
         pm.registerEvents(new TradingHandler(), this);
+        pm.registerEvents(new EndermanHandler(), this);
 
 
         getServer().getScheduler().runTaskTimer(this, new DeleteOldIslands(this), 10, 72000);

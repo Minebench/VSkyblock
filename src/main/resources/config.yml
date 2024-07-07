@@ -81,6 +81,9 @@ ChallengeComplete:
   Sound: ENTITY_PLAYER_LEVELUP
   Pitch: 1.0
 
+# The chance an Enderman spawns with a grass block if there is none on the island
+EndermanGrassBlockChance: 0.1
+
 # The world each player without an island will spawn when connecting to the server.
 # Don't change the value by hand! Use /VSkySetWorld to change this.
 SpawnWorld: world

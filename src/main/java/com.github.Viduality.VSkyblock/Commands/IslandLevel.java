@@ -34,7 +34,6 @@ import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Container;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -44,6 +43,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -89,11 +90,6 @@ public class IslandLevel extends PlayerSubCommand {
                         plugin.getDb().getReader().getIslandsChallengePoints(playerInfo.getIslandId(), (challengePoints) -> {
                             int valueriselevel = getValueRiseLevel();
                             int valueincrease = getValueIncrease();
-                            double worldsize = world.getWorldBorder().getSize();
-                            int x1 = ((int) (-1 * worldsize / 2)) >> 4;
-                            int x2 = ((int) worldsize / 2) >> 4;
-                            int z1 = x1;
-                            int z2 = x2;
                             double value = 0;
                             if (isInt(ConfigShorts.getDefConfig().getString("IslandValueonStart"))) {
                                 value = ConfigShorts.getDefConfig().getInt("IslandValueonStart");
@@ -108,7 +104,8 @@ public class IslandLevel extends PlayerSubCommand {
                                 valueperlevel = 300;
                             }
 
-                            IslandCounter counter = new IslandCounter(value, 0, (c) -> {
+                            calculate(world, value, (c) -> {
+                                IslandCacheHandler.islandCounts.put(playerInfo.getIslandName(), c);
 
                                 double currentvalue = c.value;
 
@@ -141,19 +138,6 @@ public class IslandLevel extends PlayerSubCommand {
                                 ConfigShorts.custommessagefromString("NewIslandLevel", player, String.valueOf(roundlevel));
                                 IslandCacheHandler.islandlevels.put(playerInfo.getIslandName(), roundlevel);
                             });
-
-                            // Two loops are necessary as getChunkAtAsync might return instantly if chunk is loaded
-                            for (int x = x1; x <= x2; x++) {
-                                for (int z = z1; z <= z2; z++) {
-                                    counter.toCount();
-                                }
-                            }
-
-                            for (int x = x1; x <= x2; x++) {
-                                for (int z = z1; z <= z2; z++) {
-                                    world.getChunkAtAsync(x, z, false).whenComplete((c, ex) -> counter.count(c));
-                                }
-                            }
                         });
                     }
                 }
@@ -161,6 +145,30 @@ public class IslandLevel extends PlayerSubCommand {
         } else {
             ConfigShorts.messagefromString("NoIsland", playerInfo.getPlayer());
         }
+    }
+
+    public static IslandCounter calculate(World world, double startValue, Consumer<IslandCounter> onDone) {
+        IslandCounter counter = new IslandCounter(startValue, onDone);
+
+        double worldsize = world.getWorldBorder().getSize();
+        int x1 = ((int) (-1 * worldsize / 2)) >> 4;
+        int x2 = ((int) worldsize / 2) >> 4;
+        int z1 = x1;
+        int z2 = x2;
+        // Two loops are necessary as getChunkAtAsync might return instantly if chunk is loaded
+        for (int x = x1; x <= x2; x++) {
+            for (int z = z1; z <= z2; z++) {
+                counter.toCount();
+            }
+        }
+
+        for (int x = x1; x <= x2; x++) {
+            for (int z = z1; z <= z2; z++) {
+                world.getChunkAtAsync(x, z, false).whenComplete((c, ex) -> counter.count(c));
+            }
+        }
+
+        return counter;
     }
 
     private static boolean isInt(String s) {
@@ -217,14 +225,14 @@ public class IslandLevel extends PlayerSubCommand {
         );
 
         public double value;
-        public int blocks;
-        public int entities;
+        public int blocks = 0;
+        public Map<Material, Integer> blockCounts = new HashMap<>();
+        public int entities = 0;
         private int toCount = 0;
         private final Consumer<IslandCounter> onDone;
 
-        public IslandCounter(double value, int blocks, Consumer<IslandCounter> onDone) {
+        public IslandCounter(double value, Consumer<IslandCounter> onDone) {
             this.value = value;
-            this.blocks = blocks;
             this.onDone = onDone;
         }
 
@@ -250,7 +258,8 @@ public class IslandLevel extends PlayerSubCommand {
                             if (Tag.LEAVES.isTagged(type) && !((Leaves) block.getBlockData()).isPersistent()) {
                                 continue;
                             }
-                            blocks = blocks + 1;
+                            blocks++;
+                            blockCounts.compute(type, (k, v) -> v == null ? 1 : v + 1);
                             value += DefaultFiles.blockvalues.getOrDefault(type, 0D);
 
                             if (CONTAINERS.isTagged(type) || Tag.SHULKER_BOXES.isTagged(type)) {
@@ -270,7 +279,9 @@ public class IslandLevel extends PlayerSubCommand {
 
                     if (entity instanceof Item item && !item.getItemStack().isEmpty()) {
                         entities++;
-                        value += DefaultFiles.blockvalues.getOrDefault(item.getItemStack().getType(), 0D);
+                        ItemStack itemStack = item.getItemStack();
+                        value += DefaultFiles.blockvalues.getOrDefault(itemStack.getType(), 0D) * itemStack.getAmount();
+                        blockCounts.compute(itemStack.getType(), (k, v) -> v == null ? itemStack.getAmount() : v + itemStack.getAmount());
                     } else if (entity instanceof InventoryHolder inventoryHolder) {
                         count(inventoryHolder.getInventory());
                     } else {
@@ -288,6 +299,7 @@ public class IslandLevel extends PlayerSubCommand {
             for (ItemStack item : inventory.getContents()) {
                 if (item != null && !item.isEmpty()) {
                     value += DefaultFiles.blockvalues.getOrDefault(item.getType(), 0D) * item.getAmount();
+                    blockCounts.compute(item.getType(), (k, v) -> v == null ? item.getAmount() : v + item.getAmount());
                 }
             }
         }

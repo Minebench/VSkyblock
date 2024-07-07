@@ -48,13 +48,12 @@ public class RecalculateIslandLevel implements AdminSubCommand {
                                     if (plugin.getWorldManager().loadWorld(islandname)) {
                                         plugin.getDb().getReader().getIslandsChallengePoints(islandid, (challengePoints -> {
                                             World world = plugin.getServer().getWorld(islandname);
+                                            if (world == null) {
+                                                ConfigShorts.custommessagefromString("WorldNotFound", sender, islandname);
+                                                return;
+                                            }
                                             int valueriselevel = getValueRiseLevel();
                                             int valueincrease = getValueIncrease();
-                                            double worldsize = world.getWorldBorder().getSize();
-                                            int x1 = ((int) (-1 * worldsize / 2)) >> 4;
-                                            int x2 = ((int) worldsize / 2) >> 4;
-                                            int z1 = x1;
-                                            int z2 = x2;
                                             double value = 0;
                                             if (isInt(ConfigShorts.getDefConfig().getString("IslandValueonStart"))) {
                                                 value = ConfigShorts.getDefConfig().getInt("IslandValueonStart");
@@ -69,7 +68,10 @@ public class RecalculateIslandLevel implements AdminSubCommand {
                                                 valueperlevel = 300;
                                             }
 
-                                            IslandLevel.IslandCounter counter = new IslandLevel.IslandCounter(value, 0, (c) -> {
+                                            IslandLevel.calculate(world, value, (c) -> {
+                                                if (IslandCacheHandler.playerislands.containsValue(islandname)) {
+                                                    IslandCacheHandler.islandCounts.put(islandname, c);
+                                                }
 
                                                 double currentvalue = c.value;
 
@@ -107,19 +109,6 @@ public class RecalculateIslandLevel implements AdminSubCommand {
                                                     IslandCacheHandler.islandlevels.put(islandname, roundlevel);
                                                 }
                                             });
-
-                                            // Two loops are necessary as getChunkAtAsync might return instantly if chunk is loaded
-                                            for (int x = x1; x <= x2; x++) {
-                                                for (int z = z1; z <= z2; z++) {
-                                                    counter.toCount();
-                                                }
-                                            }
-
-                                            for (int x = x1; x <= x2; x++) {
-                                                for (int z = z1; z <= z2; z++) {
-                                                    world.getChunkAtAsync(x, z, false).whenComplete((c, ex) -> counter.count(c));
-                                                }
-                                            }
                                         }));
                                     } else {
                                         ConfigShorts.custommessagefromString("WorldNotFound", sender, islandname);
