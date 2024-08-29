@@ -298,7 +298,7 @@ public class IslandOptionsInventoryHandler implements Listener {
         upgradeButtonMeta.setLore(getDescriptionGeneratorUpgradeButton(nextGeneratorLevel));
 
         if (canUpgrade) {
-            upgradeButtonMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            upgradeButtonMeta.setEnchantmentGlintOverride(true);
         }
         upgradeButtonMeta.addItemFlags(ItemFlag.values());
         upgradeButton.setItemMeta(upgradeButtonMeta);

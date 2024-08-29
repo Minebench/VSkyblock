@@ -150,15 +150,11 @@ public class IslandOptions extends PlayerSubCommand {
         if (islandOwner) {
             Material acceptBlock = Material.LIME_WOOL;
             ItemStack acceptBlockSlot = new ItemStack(acceptBlock, 1);
-            ItemMeta acceptBlockSlotItemMeta = acceptBlockSlot.getItemMeta();
-            if (acceptBlockSlotItemMeta != null) {
+            acceptBlockSlot.editMeta((acceptBlockSlotItemMeta) -> {
                 acceptBlockSlotItemMeta.setDisplayName(getAccept());
-                acceptBlockSlotItemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-                acceptBlockSlotItemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                acceptBlockSlotItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                acceptBlockSlotItemMeta.setEnchantmentGlintOverride(true);
                 acceptBlockSlotItemMeta.addItemFlags(ItemFlag.values());
-            }
-            acceptBlockSlot.setItemMeta(acceptBlockSlotItemMeta);
+            });
             isOptions.setItem(17, acceptBlockSlot);
         }
         player.openInventory(isOptions);

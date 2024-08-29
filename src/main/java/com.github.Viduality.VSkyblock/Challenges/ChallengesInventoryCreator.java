@@ -103,8 +103,7 @@ public class ChallengesInventoryCreator {
                         if (difficulty.equals(Challenge.Difficulty.EASY)) {
                             if (completedchallenges >= mineasycompleted) {
                                 nextDifficultyMeta.setDisplayName(ChatColor.GREEN + ConfigShorts.getChallengesConfig().getString("Difficulty.Medium"));
-                                nextDifficultyMeta.addEnchant(Enchantment.WATER_WORKER, 1, true);
-                                nextDifficultyMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                                nextDifficultyMeta.setEnchantmentGlintOverride(true);
                             } else {
                                 nextDifficulty.setType(Material.BARRIER);
                                 nextDifficultyMeta.setDisplayName(ChatColor.RED + ConfigShorts.getChallengesConfig().getString("CompletedChallenges.MinEasyCompleted"));
@@ -112,8 +111,7 @@ public class ChallengesInventoryCreator {
                         } else if (difficulty.equals(Challenge.Difficulty.MEDIUM)) {
                             if (completedchallenges >= minmediumcompleted) {
                                 nextDifficultyMeta.setDisplayName(ChatColor.GREEN + ConfigShorts.getChallengesConfig().getString("Difficulty.Hard"));
-                                nextDifficultyMeta.addEnchant(Enchantment.WATER_WORKER, 1, true);
-                                nextDifficultyMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                                nextDifficultyMeta.setEnchantmentGlintOverride(true);
                             } else {
                                 nextDifficulty.setType(Material.BARRIER);
                                 nextDifficultyMeta.setDisplayName(ChatColor.RED + ConfigShorts.getChallengesConfig().getString("CompletedChallenges.MinMediumCompleted"));
@@ -133,8 +131,7 @@ public class ChallengesInventoryCreator {
                             previousDifficultyMeta.setDisplayName(ChatColor.RED + ConfigShorts.getChallengesConfig().getString("Difficulty.Medium"));
                         }
 
-                        previousDifficultyMeta.addEnchant(Enchantment.WATER_WORKER, 1, true);
-                        previousDifficultyMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                        previousDifficultyMeta.setEnchantmentGlintOverride(true);
                         previousDifficulty.setItemMeta(previousDifficultyMeta);
                         cinv.setItem(18, previousDifficulty);
                     }
@@ -151,8 +148,7 @@ public class ChallengesInventoryCreator {
                         ItemMeta nextSiteMeta = nextSite.getItemMeta();
                         nextSiteMeta.setDisplayName(ChatColor.GOLD + ConfigShorts.getChallengesConfig().getString("Sites.NextSite"));
 
-                        nextSiteMeta.addEnchant(Enchantment.WATER_WORKER, 1, true);
-                        nextSiteMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                        nextSiteMeta.setEnchantmentGlintOverride(true);
                         nextSite.setItemMeta(nextSiteMeta);
                         cinv.setItem(23, nextSite);
                     }
@@ -162,8 +158,7 @@ public class ChallengesInventoryCreator {
                         ItemMeta previousSiteMeta = previousSite.getItemMeta();
                         previousSiteMeta.setDisplayName(ChatColor.GOLD + ConfigShorts.getChallengesConfig().getString("Sites.PreviousSite"));
 
-                        previousSiteMeta.addEnchant(Enchantment.WATER_WORKER, 1, true);
-                        previousSiteMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                        previousSiteMeta.setEnchantmentGlintOverride(true);
                         previousSite.setItemMeta(previousSiteMeta);
                         cinv.setItem(21, previousSite);
                     }
@@ -265,7 +260,7 @@ public class ChallengesInventoryCreator {
          * Adds cool glowing effect if the challenge is available.
          */
         if (challengeCount == 0 || challenge.getRepeatRewards() != null && !challenge.getRepeatRewards().isEmpty()) {
-            challengemeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            challengemeta.setEnchantmentGlintOverride(true);
         }
         challengemeta.addItemFlags(ItemFlag.values());
 
