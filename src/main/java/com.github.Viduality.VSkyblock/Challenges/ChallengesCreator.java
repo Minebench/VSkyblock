@@ -88,7 +88,7 @@ public class ChallengesCreator {
                 challenge.setRewardText(rewardText);
                 challenge.setRepeatRewardText(repeatRewardText);
                 challenge.setNeededLevel(neededLevel);
-                challenge.setNeededItems(createItems(neededItems));
+                challenge.setNeededItems(createMaterialMap(neededItems));
                 challenge.setRewards(createItems(rewards));
                 challenge.setRepeatRewards(createItems(repeatRewards));
                 if (isChallengeValid(challenge)) {
@@ -201,6 +201,35 @@ public class ChallengesCreator {
         }
     }
 
+    private Map<Material, Integer> createMaterialMap(List<String> materialCounts) {
+        Map<Material, Integer> materialMap = new LinkedHashMap<>();
+        for (String currentMaterial : materialCounts) {
+            String materialString = currentMaterial;
+            int count = 1;
+            if (currentMaterial.contains(";")) {
+                String[] current = currentMaterial.split(";");
+                if (current.length != 2) {
+                    return null;
+                }
+                materialString = current[0];
+                if (isInt(current[1])) {
+                    count = Integer.parseInt(current[1]);
+                } else {
+                    plugin.getLogger().severe("Could not parse count of material " + currentMaterial + " specified in challenges file! " + current[1] + " is not an integer!");
+                    return null;
+                }
+            }
+            Material material = Material.getMaterial(materialString.toUpperCase());
+            if (material != null) {
+                materialMap.put(material, count);
+            } else {
+                plugin.getLogger().severe("Could not find material " + currentMaterial + " specified in challenges file! ");
+                return null;
+            }
+        }
+        return materialMap;
+    }
+
     private List<ItemStack> createItems(List<String> items) {
         List<ItemStack> itemStacks = new ArrayList<>();
         for (String currentItem : items) {
@@ -211,8 +240,14 @@ public class ChallengesCreator {
                 }
                 if (Material.matchMaterial(current[0].toUpperCase()) != null) {
                     if (isInt(current[1])) {
-                        ItemStack itemStack = new ItemStack(Material.getMaterial(current[0].toUpperCase()), Integer.parseInt(current[1]));
-                        itemStacks.add(itemStack);
+                        Material material = Material.getMaterial(current[0].toUpperCase());
+                        if (material != null && material.isItem()) {
+                            ItemStack itemStack = new ItemStack(material, Integer.parseInt(current[1]));
+                            itemStacks.add(itemStack);
+                        } else {
+                            plugin.getLogger().severe("Could not find item " + currentItem + " specified in challenges file! " + (material != null ? "Material is not an item!" : "Material is not found!"));
+                            return null;
+                        }
                     } else {
                         return null;
                     }

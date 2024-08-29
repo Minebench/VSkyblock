@@ -76,12 +76,12 @@ public class ChallengesManager {
 
             if (challenge.getChallengeType().equals(Challenge.ChallengeType.ON_PLAYER)) {
                 boolean enoughItems = true;
-                for (ItemStack i : challenge.getNeededItems()) {
-                    int neededamount = i.getAmount();
+                for (Map.Entry<Material, Integer> i : challenge.getNeededItems().entrySet()) {
+                    int neededamount = i.getValue();
                     for (int slot = 0; slot < player.getInventory().getSize(); slot++) {
                         ItemStack item = player.getInventory().getItem(slot);
                         if (item != null) {
-                            if (item.getType().equals(i.getType())) {
+                            if (item.getType().equals(i.getKey())) {
                                 neededamount = neededamount - item.getAmount();
                             }
                         }
@@ -133,7 +133,7 @@ public class ChallengesManager {
                         islandLevelDelay.put(player.getUniqueId(), 1);
                         plugin.getDb().getReader().getIslandLevelFromUuid(player.getUniqueId(), (islandLevel) -> {
                             if (islandLevel >= challenge.getNeededLevel()) {
-                                if (getEmptySlotCount(player.getInventory(), Collections.emptyList()) >= challenge.getRewards().size()) {
+                                if (getEmptySlotCount(player.getInventory(), Collections.emptyMap()) >= challenge.getRewards().size()) {
                                     giveRewards(player.getInventory(), challenge.getRewards());
                                     notifyChallengeCompleteFirst(challenge, player);
                                     plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1);
@@ -161,9 +161,9 @@ public class ChallengesManager {
                         HashMap<Material, Integer> result = getBlocks(player, challenge.getRadius());
 
                         boolean enoughItems = true;
-                        for (ItemStack stack : challenge.getNeededItems()) {
-                            if (result.containsKey(stack.getType())) {
-                                if (result.get(stack.getType()) < stack.getAmount()) {
+                        for (Map.Entry<Material, Integer> stack : challenge.getNeededItems().entrySet()) {
+                            if (result.containsKey(stack.getKey())) {
+                                if (result.get(stack.getKey()) < stack.getValue()) {
                                     enoughItems = false;
                                 }
                             } else {
@@ -213,13 +213,13 @@ public class ChallengesManager {
      * @param inv    The inventory.
      * @param items  The list of items to be removed
      */
-    private void clearItems(Inventory inv, List<ItemStack> items) {
-        for (ItemStack itemToRemove : items) {
-            int amount = itemToRemove.getAmount();
+    private void clearItems(Inventory inv, Map<Material, Integer> items) {
+        for (Map.Entry<Material, Integer> itemToRemove : items.entrySet()) {
+            int amount = itemToRemove.getValue();
             for (int slot = 0; slot < inv.getSize(); slot++) {
                 ItemStack stackInInv = inv.getItem(slot);
                 if (stackInInv != null) {
-                    if (stackInInv.getType().equals(itemToRemove.getType())) {
+                    if (stackInInv.getType().equals(itemToRemove.getKey())) {
                         int newAmount = stackInInv.getAmount() - amount;
                         if (newAmount > 0) {
                             stackInInv.setAmount(newAmount);
@@ -242,14 +242,14 @@ public class ChallengesManager {
      * @param inv    The inventory
      * @param items  The list of items that would be removed
      */
-    private int countExtraFreeSlots(Inventory inv, List<ItemStack> items) {
+    private int countExtraFreeSlots(Inventory inv, Map<Material, Integer> items) {
         int freeSlots = 0;
-        for (ItemStack itemToRemove : items) {
-            int amount = itemToRemove.getAmount();
+        for (Map.Entry<Material, Integer> itemToRemove : items.entrySet()) {
+            int amount = itemToRemove.getValue();
             for (int slot = 0; slot < inv.getSize(); slot++) {
                 ItemStack stackInInv = inv.getItem(slot);
                 if (stackInInv != null) {
-                    if (stackInInv.getType().equals(itemToRemove.getType())) {
+                    if (stackInInv.getType().equals(itemToRemove.getKey())) {
                         int newAmount = stackInInv.getAmount() - amount;
                         if (newAmount <= 0) {
                             freeSlots++;
@@ -282,7 +282,7 @@ public class ChallengesManager {
      *
      * @param inv The inventory to search in
      */
-    private int getEmptySlotCount(Inventory inv, List<ItemStack> items) {
+    private int getEmptySlotCount(Inventory inv, Map<Material, Integer> items) {
         int counter = 0;
         for (int currentSlot = 0; currentSlot < 36; currentSlot++) {
             if (inv.getItem(currentSlot) == null) {

@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Map;
 
 public class Challenge {
 
@@ -36,7 +37,7 @@ public class Challenge {
     private String repeatRewardText;
     private List<ItemStack> rewards;
     private List<ItemStack> repeatRewards;
-    private List<ItemStack> neededItems;
+    private Map<Material, Integer> neededItems;
     private Integer neededLevel;
     private Integer slot;
     private Integer radius;
@@ -130,11 +131,11 @@ public class Challenge {
         return repeatRewards;
     }
 
-    public void setNeededItems(List<ItemStack> neededItems) {
+    public void setNeededItems(Map<Material, Integer> neededItems) {
         this.neededItems = neededItems;
     }
 
-    public List<ItemStack> getNeededItems() {
+    public Map<Material, Integer> getNeededItems() {
         return neededItems;
     }
 
