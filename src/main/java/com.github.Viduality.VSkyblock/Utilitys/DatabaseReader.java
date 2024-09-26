@@ -77,8 +77,17 @@ public class DatabaseReader {
                         while (r1.next()) {
                             playerInfo.setIslandName(r1.getString("island"));
                             playerInfo.setIslandLevel(r1.getInt("islandlevel"));
+                            playerInfo.setIslandCreated(r1.getTimestamp("time_created"));
                         }
                         preparedStatement1.close();
+
+                        PreparedStatement preparedStatement2 = connection.prepareStatement("SELECT SUM(count) AS total FROM VSkyblock_Challenges WHERE islandid = ?");
+                        preparedStatement2.setInt(1, playerInfo.getIslandId());
+                        ResultSet r2 = preparedStatement2.executeQuery();
+                        while (r2.next()) {
+                            playerInfo.setChallengesCompleted(r2.getInt("total"));
+                        }
+                        preparedStatement2.close();
                     }
                 }
 
@@ -242,6 +251,31 @@ public class DatabaseReader {
             }
 
             Bukkit.getScheduler().runTask(plugin, () -> callback.accept(islandmembers));
+        });
+    }
+
+    /**
+     * Gets the total members of an island.
+     *
+     * @param islandid  The id of an island.
+     * @param callback  Returns the total of the island.
+     */
+    public void getIslandMembersTotal(Integer islandid, Consumer<Integer> callback) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            int total = 0;
+            try (Connection connection = connector.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS total FROM `vskyblock_player` WHERE islandid = ?")) {
+                preparedStatement.setInt(1, islandid);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    total = resultSet.getInt("total");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            int finalTotal = total;
+            Bukkit.getScheduler().runTask(plugin, () -> callback.accept(finalTotal));
         });
     }
 
