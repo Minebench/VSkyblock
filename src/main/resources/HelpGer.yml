@@ -22,6 +22,7 @@ Challenges: "Öffnet das Challenges-Menü. Per Klick kannst du dort Challenges a
 IntroTextAdmin: "Übersicht über alle VSkyblock Admin-Befehle:"
 VSkyblockDeletePlayer: "Löscht einen Spieler komplett aus der Datenbank."
 VSkyblockResetChallenges: "Setzt alle Challenges eines Spielers zurück."
+VSkyblockRecalculateIsland: "Kalkuliert das Level eines Spielers neu."
 VSkyblockSetNether: "Setzt den Nether für alle Inseln/Welten. Benutzt die Welt in der der Spieler sich aktuell befindet."
 VSkyblockSetSpawnWorld: "Setzt die Spawn-Welt für neue Spieler. Spieler ohne Insel spawnen in dieser Welt."
 VSkyblockSetSpawnPoint: "Setzt den Spawnpunkt der Welt an den Ort an dem der Spieler sich befindet."

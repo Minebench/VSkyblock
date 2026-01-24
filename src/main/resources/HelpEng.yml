@@ -22,6 +22,7 @@ Challenges: "Opens the challenges menu. You can complete challenges per klick on
 IntroTextAdmin: "List of all VSkyblock admin commands:"
 VSkyblockDeletePlayer: "Deletes a player entirely from the database."
 VSkyblockResetChallenges: "Resets all challenges for a player to count 0."
+VSkyblockRecalculateIsland: "Recalculates the level of a player."
 VSkyblockSetNether: "Sets the nether for all islands. Uses the world where the executing player is."
 VSkyblockSetSpawnWorld: "Sets the spawn world for new players. Players without an island will spawn there."
 VSkyblockSetSpawnPoint: "Sets the spawn point for the world at the players location."

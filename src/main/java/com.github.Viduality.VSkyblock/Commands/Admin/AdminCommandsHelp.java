@@ -38,6 +38,7 @@ public class AdminCommandsHelp implements AdminSubCommand {
             String intro = ConfigShorts.getHelpConfig().getString("IntroTextAdmin");
             String deletePlayer = ConfigShorts.getHelpConfig().getString("VSkyblockDeletePlayer");
             String resetChallenges = ConfigShorts.getHelpConfig().getString("VSkyblockResetChallenges");
+            String recalculateIsland = ConfigShorts.getHelpConfig().getString("VSkyblockRecalculateIsland");
             String setNether = ConfigShorts.getHelpConfig().getString("VSkyblockSetNether");
             String setSpawnWorld = ConfigShorts.getHelpConfig().getString("VSkyblockSetSpawnWorld");
             String setSpawnPoint = ConfigShorts.getHelpConfig().getString("VSkyblockSetSpawnPoint");
@@ -58,6 +59,7 @@ public class AdminCommandsHelp implements AdminSubCommand {
             String message = ChatColor.AQUA + intro + "\n" +
                     ChatColor.GOLD + ChatColor.BOLD + "/VSkyblock delete player <Player>" + "\n" + ChatColor.RESET + " - " + deletePlayer + "\n" +
                     ChatColor.GOLD + ChatColor.BOLD + "/VSkyblock reset challenges <Player>" + "\n" + ChatColor.RESET + " - " + resetChallenges + "\n" +
+                    ChatColor.GOLD + ChatColor.BOLD + "/VSkyblock recalculate islandlevel <Player>" + "\n" + ChatColor.RESET + " - " + recalculateIsland + "\n" +
                     ChatColor.GOLD + ChatColor.BOLD + "/VSkyblock set nether" + "\n" + ChatColor.RESET + " - " + setNether + "\n" +
                     ChatColor.GOLD + ChatColor.BOLD + "/VSkyblock set spawnworld" + "\n" + ChatColor.RESET + " - " + setSpawnWorld + "\n" +
                     ChatColor.GOLD + ChatColor.BOLD + "/VSkyblock set spawnpoint" + "\n" + ChatColor.RESET + " - " + setSpawnPoint + "\n" +
