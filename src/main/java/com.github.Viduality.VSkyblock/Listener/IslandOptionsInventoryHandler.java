@@ -249,7 +249,7 @@ public class IslandOptionsInventoryHandler implements Listener {
 
         ItemStack frames = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1);
         ItemMeta framesMeta = frames.getItemMeta();
-        framesMeta.setDisplayName(" ");
+        framesMeta.setHideTooltip(true);
         frames.setItemMeta(framesMeta);
         for (int i = 0; i < 27; i++) {
             if (i != slotCobbleDropChance) {
