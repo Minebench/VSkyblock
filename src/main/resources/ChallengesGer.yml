@@ -498,13 +498,13 @@ Medium:
   TurtleLover:
     Name: Schildkrötenliebhaber
     Slot: 10
-    ShownItem: Scute
+    ShownItem: Turtle_Scute
     Type: onPlayer
-    Description: "Erfarme einen Schildkrötenpanzer und 2 Hornschilde (Scute). Angle eine Nautilusschale"
-    NeededText: "1 Schildkrötenpanzer, 2 Hornschilde, 1 Nautilusschale"
+    Description: "Erfarme einen Schildkrötenpanzer und 2 Schildkröten-Hornschilde (Scute). Angle eine Nautilusschale"
+    NeededText: "1 Schildkrötenpanzer, 2 Schildkröten-Hornschilde, 1 Nautilusschale"
     Needed:
     - Turtle_Helmet;1
-    - Scute;2
+    - Turtle_Scute;2
     - Nautilus_Shell;1
     RewardText: "1 Herz des Meeres, 32 Prismarinziegel, 32 Prismarin, 16 Dunkles Prismarin"
     Reward:

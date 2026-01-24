@@ -100,8 +100,8 @@ CobblestoneGenerator:
       - Copper_Ingot;128
       - Dark_Oak_Log;64
       - Sweet_Berries;64
-      - Scute;10
-      NeededText: 128 copper ingots, 64 dark oak logs, 64 sweet berries, 10 scute
+      - Turtle_Scute;10
+      NeededText: 128 copper ingots, 64 dark oak logs, 64 sweet berries, 10 turtle scute
     Level_7:
       Item: EMERALD_ORE
       AddsFeature: §9Chance for emeralds

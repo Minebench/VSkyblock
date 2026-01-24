@@ -100,8 +100,8 @@ CobblestoneGenerator:
       - Copper_Ingot;128
       - Dark_Oak_Log;64
       - Sweet_Berries;64
-      - Scute;10
-      NeededText: 128 Kupferbarren, 64 Schwarzeichenholzstämme, 64 Süßbeeren, 10 Scute
+      - Turtle_Scute;10
+      NeededText: 128 Kupferbarren, 64 Schwarzeichenholzstämme, 64 Süßbeeren, 10 Schildkröten-Hornschilde
     Level_7:
       Item: EMERALD_ORE
       AddsFeature: §9Chance auf Smaragde

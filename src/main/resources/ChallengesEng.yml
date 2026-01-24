@@ -498,13 +498,13 @@ Medium:
   TurtleLover:
     Name: Turtle-Lover
     Slot: 10
-    ShownItem: Scute
+    ShownItem: Turtle_Scute
     Type: onPlayer
-    Description: "Obtain one turtle helmet and 2 scute. Fish one nautilus shell"
-    NeededText: "1 turtle helmet, 2 scute, 1 nautilus shell"
+    Description: "Obtain one turtle helmet and 2 turtle scute. Fish one nautilus shell"
+    NeededText: "1 turtle helmet, 2 turtle scute, 1 nautilus shell"
     Needed:
     - Turtle_Helmet;1
-    - Scute;2
+    - Turtle_Scute;2
     - Nautilus_Shell;1
     RewardText: "1 heart of the sea, 32 prismarine, 32 prismarine bricks, 16 dark prismarine"
     Reward:
