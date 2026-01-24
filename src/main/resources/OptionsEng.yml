@@ -130,8 +130,7 @@ CobblestoneGenerator:
         - Gold_Ingot;64
         - Emerald;50
         - Diamond;32
-        - Ancient_Debris;16
-      NeededText: 64 coal, 64 iron ingots, 64 lapis lazuli, 64 gold ingots, 50 emeralds, 32 diamonds, 16 ancient debris
+      NeededText: 64 coal, 64 iron ingots, 64 lapis lazuli, 64 gold ingots, 50 emeralds, 32 diamonds
     Max_Level:
       Item: NETHER_STAR
       Description: §6§oYou reached the highest level for your cobblestone generator. There are no other upgrades possible yet. Good job!

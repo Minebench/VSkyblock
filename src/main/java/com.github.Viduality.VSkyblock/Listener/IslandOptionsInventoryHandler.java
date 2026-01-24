@@ -284,7 +284,7 @@ public class IslandOptionsInventoryHandler implements Listener {
         Integer currentGeneratorLevel = CobblestoneGenerator.islandGenLevel.get(island);
         Integer nextGeneratorLevel = currentGeneratorLevel + 1;
         String upgradeButtonItem;
-        boolean canUpgrade = nextGeneratorLevel <= 8;
+        boolean canUpgrade = nextGeneratorLevel <= getMaxGeneratorLevel();
         if (!canUpgrade) {
             upgradeButtonItem = ConfigShorts.getOptionsConfig().getString("CobblestoneGenerator.Upgrade.Max_Level.Item");
         } else {
@@ -303,6 +303,16 @@ public class IslandOptionsInventoryHandler implements Listener {
         upgradeButtonMeta.addItemFlags(ItemFlag.values());
         upgradeButton.setItemMeta(upgradeButtonMeta);
         return upgradeButton;
+    }
+
+    private int getMaxGeneratorLevel() {
+        int keys = ConfigShorts.getOptionsConfig().getConfigurationSection("CobblestoneGenerator.Upgrade").getKeys(false).size();
+        for (int i = 1; i <= keys; i++) {
+            if (!ConfigShorts.getOptionsConfig().contains("CobblestoneGenerator.Upgrade.Level_" + i, true)) {
+                return i - 1;
+            }
+        }
+        return 0;
     }
 
     private ItemStack getCobbleDropChanceInfo(UUID playerUUID) {
@@ -363,7 +373,7 @@ public class IslandOptionsInventoryHandler implements Listener {
      */
     private String getDisplayNameGeneratorUpgradeButton(Integer nextGeneratorLevel) {
         String displayname;
-        if (nextGeneratorLevel > 8) {
+        if (nextGeneratorLevel > getMaxGeneratorLevel()) {
             displayname = ConfigShorts.getOptionsConfig().getString("CobblestoneGenerator.Upgrade.DisplayNameMaxLevel");
         } else {
             displayname = ConfigShorts.getOptionsConfig().getString("CobblestoneGenerator.Upgrade.DisplayName");
@@ -395,7 +405,7 @@ public class IslandOptionsInventoryHandler implements Listener {
 
     private List<String> getDescriptionGeneratorUpgradeButton(Integer nextGeneratorLevel) {
         List<String> descriptionList = new ArrayList<>();
-        if (nextGeneratorLevel > 8) {
+        if (nextGeneratorLevel > getMaxGeneratorLevel()) {
             String description = ConfigShorts.getOptionsConfig().getString("CobblestoneGenerator.Upgrade.Max_Level.Description");
             descriptionList.addAll(splitString(description));
         } else {
