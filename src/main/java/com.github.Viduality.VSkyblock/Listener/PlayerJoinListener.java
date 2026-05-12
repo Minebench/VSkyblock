@@ -38,6 +38,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayerJoinListener implements Listener {
 
@@ -69,7 +70,9 @@ public class PlayerJoinListener implements Listener {
             if (!result.getName().equals(player.getName())) {
                 plugin.getDb().getWriter().updatePlayerName(player.getId(), player.getName());
             }
-            plugin.getWorldManager().loadWorld(result.getIslandName());
+            CompletableFuture<Boolean> cf = new CompletableFuture<>();
+            plugin.getServer().getScheduler().runTask(plugin, () -> cf.complete(plugin.getWorldManager().loadWorld(result.getIslandName())));
+            cf.join();
         }
     }
 
