@@ -120,7 +120,7 @@ public class WorldManager {
      */
     public boolean loadWorld(String world) {
         if (getAllWorlds().contains(world)) {
-            if (getUnloadedWorlds().contains(world)) {
+            if (!getLoadedWorlds().contains(world)) {
                 WorldCreator wc = new WorldCreator(world, new NamespacedKey(plugin, world.toLowerCase(Locale.ROOT)));
                 wc.generator(getGenerator(world));
                 wc.environment(getEnvironment(world));
@@ -136,7 +136,7 @@ public class WorldManager {
                     return false;
                 }
             } else {
-                return getLoadedWorlds().contains(world);
+                return true;
             }
         } else {
             plugin.getLogger().severe("Unknown world " + world);

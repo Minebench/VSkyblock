@@ -34,6 +34,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -48,8 +49,21 @@ public class DatabaseReader {
         this.connector = sqlConnector;
     }
 
+
     /**
-     * Gets the data of an player (database action).
+     * Gets the data of a player (database action).
+     *
+     * @param uuid      The unique id of a player.
+     * @return A completable future
+     */
+    public CompletableFuture<PlayerInfo> getPlayerData(final String uuid) {
+        CompletableFuture<PlayerInfo> cf = new CompletableFuture<>();
+        getPlayerData(uuid, cf::complete);
+        return cf;
+    }
+
+    /**
+     * Gets the data of a player (database action).
      *
      * @param uuid      The unique id of a player.
      * @param callback  Returns the player data. (Database Cache)

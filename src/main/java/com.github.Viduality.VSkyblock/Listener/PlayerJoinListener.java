@@ -18,10 +18,12 @@ package com.github.Viduality.VSkyblock.Listener;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.github.Viduality.VSkyblock.Utilitys.IslandCacheHandler;
 import com.github.Viduality.VSkyblock.Utilitys.*;
 import com.github.Viduality.VSkyblock.VSkyblock;
 import com.github.Viduality.VSkyblock.WorldGenerator.MasterIslandGenerator;
+import io.papermc.paper.event.player.AsyncPlayerSpawnLocationEvent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -47,27 +49,36 @@ public class PlayerJoinListener implements Listener {
         this.plugin = plugin;
     }
 
-
     @EventHandler
-    public void onPlayerJoinEvent(PlayerJoinEvent playerJoinEvent) {
-        Player player = playerJoinEvent.getPlayer();
-
-        if (plugin.getWorldManager().getUnloadedWorlds().contains(ConfigShorts.getDefConfig().getString("SpawnWorld"))) {
+    public void onPlayerSpawnEvent(AsyncPlayerSpawnLocationEvent event) {
+        if (!plugin.getWorldManager().getLoadedWorlds().contains(ConfigShorts.getDefConfig().getString("SpawnWorld"))) {
             plugin.getWorldManager().loadWorld(ConfigShorts.getDefConfig().getString("SpawnWorld"));
         }
 
-        if (plugin.getWorldManager().getUnloadedWorlds().contains(ConfigShorts.getDefConfig().getString("NetherWorld"))) {
+        if (!plugin.getWorldManager().getLoadedWorlds().contains(ConfigShorts.getDefConfig().getString("NetherWorld"))) {
             plugin.getWorldManager().loadWorld(ConfigShorts.getDefConfig().getString("NetherWorld"));
         }
 
+        PlayerProfile player = event.getConnection().getProfile();
+        PlayerInfo result = plugin.getDb().getReader().getPlayerData(player.getUniqueId().toString()).join();
 
-        plugin.getDb().getReader().getPlayerData(player.getUniqueId().toString(), result -> {
-            if (result.getUuid() == null) {
-                plugin.getDb().getWriter().addPlayer(player.getUniqueId(), player.getName());
-            } else if (player.isOnline()) {
-                if (!result.getName().equals(player.getName())) {
-                    plugin.getDb().getWriter().updatePlayerName(player.getUniqueId(), player.getName());
-                }
+        if (result.getUuid() == null) {
+            plugin.getDb().getWriter().addPlayer(player.getId(), player.getName());
+            event.setSpawnLocation(plugin.getWorldManager().getSpawnLocation(ConfigShorts.getDefConfig().getString("SpawnWorld")));
+        } else {
+            if (!result.getName().equals(player.getName())) {
+                plugin.getDb().getWriter().updatePlayerName(player.getId(), player.getName());
+            }
+            plugin.getWorldManager().loadWorld(result.getIslandName());
+        }
+    }
+
+
+    @EventHandler
+    public void onPlayerJoinEvent(PlayerJoinEvent playerJoinEvent) {
+        plugin.getDb().getReader().getPlayerData(playerJoinEvent.getPlayer().getUniqueId().toString(), result -> {
+            Player player = result.getPlayer();
+            if (result.getUuid() != null && player != null && player.isOnline()) {
                 if (plugin.scoreboardmanager.doesobjectiveexist("deaths")) {
                     if (plugin.scoreboardmanager.addPlayerToObjective(player, "deaths")) {
                         plugin.scoreboardmanager.updatePlayerScore(player.getName(), "deaths", result.getDeathCount());
