@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
@@ -58,7 +60,7 @@ public class WorldManager {
                     }
                 }
 
-                WorldCreator wc = new WorldCreator(island);
+                WorldCreator wc = new WorldCreator(island, new NamespacedKey(plugin, island.toLowerCase(Locale.ROOT)));
                 wc.generator("VSkyblock");
                 wc.environment(World.Environment.NORMAL);
                 wc.type(WorldType.FLAT);
@@ -119,7 +121,7 @@ public class WorldManager {
     public boolean loadWorld(String world) {
         if (getAllWorlds().contains(world)) {
             if (getUnloadedWorlds().contains(world)) {
-                WorldCreator wc = new WorldCreator(world);
+                WorldCreator wc = new WorldCreator(world, new NamespacedKey(plugin, world.toLowerCase(Locale.ROOT)));
                 wc.generator(getGenerator(world));
                 wc.environment(getEnvironment(world));
                 wc.type(WorldType.FLAT);
