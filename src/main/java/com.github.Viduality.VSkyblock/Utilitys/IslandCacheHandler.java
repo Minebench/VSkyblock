@@ -18,6 +18,7 @@ package com.github.Viduality.VSkyblock.Utilitys;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.github.Viduality.VSkyblock.Challenges.Challenge;
 import com.github.Viduality.VSkyblock.Commands.IslandLevel;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -61,7 +62,15 @@ public class IslandCacheHandler {
 
     public static Map<String, Location> islandhomes = new HashMap<>();
 
-    public static HashMap<String, Integer> islandlevels = new HashMap<>(); //Islandname and islandlevel
+    /**
+     * Island name -> island level
+     */
+    public static Map<String, Integer> islandlevels = new HashMap<>();
+
+    /**
+     * Island name -> max difficulty of reached challenges
+     */
+    public static Map<String, Challenge.Difficulty> islandChallengeDifficulty = new HashMap<>();
 
     public static Map<String, IslandLevel.IslandCounter> islandCounts = new HashMap<>();
 

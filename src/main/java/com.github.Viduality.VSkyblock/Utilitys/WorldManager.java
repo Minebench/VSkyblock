@@ -475,4 +475,8 @@ public class WorldManager {
             return world;
         }
     }
+
+    public static String getWorldNameFromId(int islandId) {
+        return "VSkyblockIsland_" + islandId;
+    }
 }

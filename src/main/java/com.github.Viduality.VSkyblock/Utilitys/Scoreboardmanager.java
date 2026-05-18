@@ -137,7 +137,7 @@ public class Scoreboardmanager {
             for (String challengeId : challenges.getTrackedChallenges()) {
                 Challenge challenge = ChallengesManager.challenges.get(challengeId);
                 if (challenge != null) {
-                    challengeCounts.put(challenge, challenges.getChallengeCount(challengeId));
+                    challengeCounts.put(challenge, challenges.getChallengeCount(challenge));
                 }
             }
 

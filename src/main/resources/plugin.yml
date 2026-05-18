@@ -5,7 +5,7 @@ author: Viduality
 api-version: '1.21'
 load: POSTWORLD
 database: true
-softdepend: [VSpecialItems]
+softdepend: [VSpecialItems,LuckPerms]
 
 
 

@@ -19,6 +19,8 @@ package com.github.Viduality.VSkyblock.Utilitys;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.github.Viduality.VSkyblock.Challenges.Challenge;
+
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -49,12 +51,12 @@ public class ChallengesCache {
     private Map<String, Integer> challengeCounts = new HashMap<>();
     private Set<String> trackedChallenges = new LinkedHashSet<>();
 
-    public void setChallengeCount(String challenge, int count) {
-        challengeCounts.put(challenge, count);
+    public void setChallengeCount(Challenge challenge, int count) {
+        challengeCounts.put(challenge.getMySQLKey(), count);
     }
 
-    public int getChallengeCount(String challenge) {
-        return challengeCounts.getOrDefault(challenge, 0);
+    public int getChallengeCount(Challenge challenge) {
+        return challengeCounts.getOrDefault(challenge.getMySQLKey(), 0);
     }
 
     public Map<String, Integer> getAllChallengeCounts() {

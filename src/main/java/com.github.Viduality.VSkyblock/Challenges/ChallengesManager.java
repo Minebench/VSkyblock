@@ -72,7 +72,7 @@ public class ChallengesManager {
      */
     public void checkChallenge(Challenge challenge, Player player, Inventory inv, int challengeSlot) {
         plugin.getDb().getReader().getIslandIdFromPlayer(player.getUniqueId(), (islandid) -> plugin.getDb().getReader().getIslandChallenges(islandid, (islandChallenges) -> {
-            boolean repeat = islandChallenges.getChallengeCount(challenge.getMySQLKey()) != 0;
+            boolean repeat = islandChallenges.getChallengeCount(challenge) != 0;
 
             if (challenge.getChallengeType().equals(Challenge.ChallengeType.ON_PLAYER)) {
                 boolean enoughItems = true;
@@ -105,8 +105,8 @@ public class ChallengesManager {
                             clearItems(player.getInventory(), challenge.getNeededItems());
                         }
                         giveRewards(player.getInventory(), rewards);
-                        plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1);
-                        inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
+                        plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge) + 1);
+                        inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                         unTrack(challenge, player);
                         if (!repeat) {
                             notifyChallengeCompleteFirst(challenge, player);
@@ -136,8 +136,8 @@ public class ChallengesManager {
                                 if (getEmptySlotCount(player.getInventory(), Collections.emptyMap()) >= challenge.getRewards().size()) {
                                     giveRewards(player.getInventory(), challenge.getRewards());
                                     notifyChallengeCompleteFirst(challenge, player);
-                                    plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1);
-                                    inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
+                                    plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge) + 1);
+                                    inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                                 } else {
                                     ConfigShorts.messagefromString("NotEnoughInventorySpace", player);
                                 }
@@ -150,7 +150,7 @@ public class ChallengesManager {
                     }
                 } else {
                     ConfigShorts.messagefromString("ChallengeNotRepeatable", player);
-                    inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
+                    inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                 }
             } else if (challenge.getChallengeType().equals(Challenge.ChallengeType.ON_ISLAND)) {
                 if (!repeat) {
@@ -174,8 +174,8 @@ public class ChallengesManager {
                             if (getEmptySlotCount(player.getInventory(), challenge.getNeededItems()) >= challenge.getRewards().size()) {
                                 giveRewards(player.getInventory(), challenge.getRewards());
                                 notifyChallengeCompleteFirst(challenge, player);
-                                plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1);
-                                inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
+                                plugin.getDb().getWriter().updateChallengeCount(islandid, challenge.getMySQLKey(), islandChallenges.getChallengeCount(challenge) + 1);
+                                inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                             } else {
                                 ConfigShorts.messagefromString("NotEnoughInventorySpace", player);
                             }
@@ -187,7 +187,7 @@ public class ChallengesManager {
                     }
                 } else {
                     ConfigShorts.messagefromString("ChallengeNotRepeatable", player);
-                    inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge.getMySQLKey()) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
+                    inv.setItem(challengeSlot, inventoryCreator.createChallengeItem(challenge, islandChallenges.getChallengeCount(challenge) + 1, islandChallenges.getTrackedChallenges().contains(challenge.getMySQLKey())));
                 }
             }
         }));
@@ -325,7 +325,7 @@ public class ChallengesManager {
     public void toggleTracked(Challenge challenge, Player player) {
         plugin.getDb().getReader().getIslandIdFromPlayer(player.getUniqueId(), (islandId) -> plugin.getDb().getReader().getIslandChallenges(islandId, (challenges) -> {
             if (challenges.getTrackedChallenges().size() < 10
-                    && challenges.getChallengeCount(challenge.getChallengeName()) == 0 || challenge.getRepeatRewards() != null) {
+                    && challenges.getChallengeCount(challenge) == 0 || challenge.getRepeatRewards() != null) {
                 if (challenges.getTrackedChallenges().contains(challenge.getMySQLKey())) {
                     challenges.removeTrackedChallenge(challenge.getMySQLKey());
                     plugin.getDb().getWriter().updateChallengeTracked(islandId, challenge.getMySQLKey(), false);

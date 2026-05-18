@@ -18,6 +18,8 @@ package com.github.Viduality.VSkyblock.Utilitys;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.github.Viduality.VSkyblock.Challenges.Challenge;
+import com.github.Viduality.VSkyblock.Challenges.ChallengesManager;
 import com.github.Viduality.VSkyblock.Listener.CobblestoneGenerator;
 import com.github.Viduality.VSkyblock.SQLConnector;
 import com.github.Viduality.VSkyblock.VSkyblock;
@@ -126,7 +128,7 @@ public class DatabaseReader {
             }
             final String islandname;
             if (latestIsland > -1) {
-                islandname = "VSkyblockIsland_" + latestIsland;
+                islandname = WorldManager.getWorldNameFromId(latestIsland);
             } else {
                 islandname = null;
             }
@@ -272,7 +274,7 @@ public class DatabaseReader {
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT islandid FROM VSkyblock_Island WHERE islandid NOT IN (SELECT islandid FROM VSkyblock_Player)")) {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    emptyislands.add("VSkyblockIsland_" + resultSet.getInt("islandid"));
+                    emptyislands.add(WorldManager.getWorldNameFromId(resultSet.getInt("islandid")));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -325,9 +327,17 @@ public class DatabaseReader {
                 preparedStatement.setInt(1, islandid);
                 ResultSet r = preparedStatement.executeQuery();
                 while (r.next()) {
-                    cache.setChallengeCount(r.getString("challenge"), r.getInt("count"));
+                    Challenge challenge = ChallengesManager.challenges.get(r.getString("challenge"));
+                    int count = r.getInt("count");
+                    cache.setChallengeCount(challenge, count);
                     if (r.getBoolean("tracked")) {
                         cache.addTrackedChallenge(r.getString("challenge"));
+                    }
+                    if (count > 0) {
+                        String worldName = WorldManager.getWorldNameFromId(islandid);
+                        if (challenge.getDifficulty().ordinal() > IslandCacheHandler.islandChallengeDifficulty.getOrDefault(worldName, Challenge.Difficulty.EASY).ordinal()) {
+                            IslandCacheHandler.islandChallengeDifficulty.put(worldName, challenge.getDifficulty());
+                        }
                     }
                 }
                 preparedStatement.close();

@@ -113,6 +113,10 @@ public class VSkyblock extends JavaPlugin implements Listener {
 
         getServer().getScheduler().runTaskTimer(this, new DeleteOldIslands(this), 10, 72000);
 
+        if (pm.isPluginEnabled("LuckPerms")) {
+            new LuckPermsContextProvider(this);
+        }
+
         /*  NOT IMPLEMENTED YET
          {   //Teleporter Recipe
             ItemStack portalFrame = new ItemStack(Material.END_PORTAL_FRAME);

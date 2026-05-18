@@ -74,14 +74,14 @@ public class ChallengesInventoryCreator {
                     int completedchallenges = 0;
                     int slotrange = ((site - 1) * 18) + 1;
                     for (Challenge challenge : getChallenges(difficulty).values()) {
-                        if (islandChallenges.getChallengeCount(challenge.getMySQLKey()) > 0) {
+                        if (islandChallenges.getChallengeCount(challenge) > 0) {
                             completedchallenges = completedchallenges + 1;
                         }
                     }
                     for (int i = slotrange; i <= slotrange + 17; i++) {
                         Challenge c = getChallenge(difficulty, i);
                         if (c != null) {
-                            cinv.setItem(c.getInventorySlot(), createChallengeItem(c, islandChallenges.getChallengeCount(c.getMySQLKey()), islandChallenges.getTrackedChallenges().contains(c.getMySQLKey())));
+                            cinv.setItem(c.getInventorySlot(), createChallengeItem(c, islandChallenges.getChallengeCount(c), islandChallenges.getTrackedChallenges().contains(c.getMySQLKey())));
                         }
                     }
                     int mineasycompleted = 5;
