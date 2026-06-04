@@ -47,6 +47,7 @@ public class IslandCommand extends PlayerSubCommand {
         registerSubCommand(new IslandMembers(plugin));
         registerSubCommand(new IslandLevel(plugin));
         registerSubCommand(new IslandTop(plugin));
+        registerSubCommand(new IslandInfo(plugin));
         registerSubCommand(new IslandOptions(plugin));
         registerSubCommand(new IslandSetNetherhome(plugin));
         registerSubCommand(new IslandNether(plugin));

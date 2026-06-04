@@ -65,6 +65,7 @@ public class IslandHelp extends SubCommand {
                 ChatColor.GOLD + ChatColor.BOLD + "/island leave" + "\n" + ChatColor.RESET + " - " + leave + "\n" +
                 ChatColor.GOLD + ChatColor.BOLD + "/island leave confirm" + "\n" + ChatColor.RESET + " - " + leaveconfirm + "\n" +
                 ChatColor.GOLD + ChatColor.BOLD + "/island level" + "\n" + ChatColor.RESET + " - " + level + "\n" +
+                ChatColor.GOLD + ChatColor.BOLD + "/island info" + "\n" + ChatColor.RESET + " - Shows island age, range, level and challenge progress\n" +
                 ChatColor.GOLD + ChatColor.BOLD + "/island members" + "\n" + ChatColor.RESET + " - " + members + "\n" +
                 ChatColor.GOLD + ChatColor.BOLD + "/island options" + "\n" + ChatColor.RESET + " - " + options + "\n" +
                 ChatColor.GOLD + ChatColor.BOLD + "/island top" + "\n" + ChatColor.RESET + " - " + top + "\n" +
