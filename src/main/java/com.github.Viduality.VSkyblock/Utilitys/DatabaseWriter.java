@@ -26,10 +26,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Date;
 import java.util.UUID;
 
 public class DatabaseWriter {
@@ -76,9 +74,10 @@ public class DatabaseWriter {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try (Connection connection = connector.getConnection()) {
                 PreparedStatement preparedStatement;
-                preparedStatement = connection.prepareStatement("INSERT INTO VSkyblock_Island(island, difficulty) VALUES(?, ?)");
+                preparedStatement = connection.prepareStatement("INSERT INTO VSkyblock_Island(island, difficulty, time_created) VALUES(?, ?, ?)");
                 preparedStatement.setString(1, island);
                 preparedStatement.setString(2, difficutly);
+                preparedStatement.setTimestamp(3, new Timestamp(new Date().getTime()));
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
             } catch (SQLException e) {

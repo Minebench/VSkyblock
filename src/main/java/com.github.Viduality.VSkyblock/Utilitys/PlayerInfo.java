@@ -3,6 +3,7 @@ package com.github.Viduality.VSkyblock.Utilitys;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 public class PlayerInfo {
@@ -14,6 +15,24 @@ public class PlayerInfo {
     private String islandName = null;
     private int islandLevel = 0;
     private int deathCount = 0;
+    private Timestamp islandCreated = null;
+    private int challengesCompleted = 0;
+
+    public int getChallengesCompleted() {
+        return challengesCompleted;
+    }
+
+    public void setChallengesCompleted(int challengesCompleted) {
+        this.challengesCompleted = challengesCompleted;
+    }
+
+    public Timestamp getIslandCreated() {
+        return islandCreated;
+    }
+
+    public void setIslandCreated(Timestamp islandCreated) {
+        this.islandCreated = islandCreated;
+    }
 
 
     /**

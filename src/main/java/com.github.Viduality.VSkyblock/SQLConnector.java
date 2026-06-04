@@ -158,6 +158,7 @@ public class SQLConnector {
                             + "cobblestonelevel BIGINT DEFAULT 0,"
                             + "totalblocks BIGINT DEFAULT 140,"
                             + "totalentities BIGINT DEFAULT 0,"
+                            + "time_created TIMESTAMP NOT NULL,"
                             + "PRIMARY KEY (islandid))");
             connection.createStatement().execute(
                     "CREATE TABLE IF NOT EXISTS VSkyblock_IslandLocations("
